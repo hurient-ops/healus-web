@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@theme {
+  --color-primary: #0a484a;
+  --color-primary-light: #316668;
+  --color-secondary: #3d6751;
+  --color-secondary-light: #bceace;
+  --color-background: #fbf9f8;
+  --color-surface: #ffffff;
+  --color-surface-dim: #dbd9d9;
+  --color-text: #1b1c1c;
+  --color-text-muted: #404848;
+  --color-border: #e4e2e2;
+  --color-accent: #bfedd1;
+  --font-sans: 'GmarketSans', sans-serif;
+  --font-serif: 'GmarketSans', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: 'GmarketSans', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'GmarketSans', sans-serif;
+  }
+}
