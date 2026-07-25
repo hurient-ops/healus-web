@@ -32,8 +32,8 @@ export default function Signup() {
     try {
       // 1. Supabase Auth 계정 생성
       const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
+        email: formData.email.trim(),
+        password: formData.password.trim(),
       });
 
       if (authError) throw authError;
