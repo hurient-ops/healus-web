@@ -1,10 +1,73 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, User, Mail, Lock, Smartphone, Activity, Calendar, Phone, CheckCircle2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function Signup() {
   const navigate = useNavigate();
   const [agreed, setAgreed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  
+  // 폼 상태
+  const [formData, setFormData] = useState({
+    name: '',
+    birth_date: '',
+    phone_number: '',
+    email: '',
+    password: '',
+    pump_id: ''
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!agreed) return;
+    setLoading(true);
+    setErrorMsg('');
+
+    try {
+      // 1. Supabase Auth 계정 생성
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (authError) throw authError;
+
+      // 2. public.users 테이블에 추가 정보 저장
+      if (authData.user) {
+        const { error: dbError } = await supabase.from('users').insert([
+          {
+            id: authData.user.id,
+            email: formData.email,
+            name: formData.name,
+            birth_date: formData.birth_date,
+            phone_number: formData.phone_number,
+            pump_id: formData.pump_id,
+            terms_agreed: true
+          }
+        ]);
+
+        if (dbError) {
+          console.error("DB Insert Error:", dbError);
+          throw new Error("사용자 정보를 저장하는데 실패했습니다.");
+        }
+      }
+
+      // 성공 시 로그인 페이지로
+      alert("회원가입이 완료되었습니다!");
+      navigate('/login');
+    } catch (error: any) {
+      console.error(error);
+      setErrorMsg(error.message || "회원가입 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6 relative overflow-hidden">
@@ -45,7 +108,12 @@ export default function Signup() {
 
 
 
-          <form onSubmit={(e) => { e.preventDefault(); if (agreed) navigate('/login'); }} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {errorMsg && (
+              <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium">
+                {errorMsg}
+              </div>
+            )}
             <div className="flex gap-4">
               <div className="w-1/2">
                 <label className="block text-sm font-bold text-gray-700 mb-2">이름 *</label>
@@ -55,7 +123,10 @@ export default function Signup() {
                   </div>
                   <input 
                     type="text" 
+                    name="name"
                     required
+                    value={formData.name}
+                    onChange={handleInputChange}
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
                     placeholder="홍길동"
                   />
@@ -69,7 +140,10 @@ export default function Signup() {
                   </div>
                   <input 
                     type="date" 
+                    name="birth_date"
                     required
+                    value={formData.birth_date}
+                    onChange={handleInputChange}
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all text-gray-700"
                   />
                 </div>
@@ -85,7 +159,10 @@ export default function Signup() {
                   </div>
                   <input 
                     type="tel" 
+                    name="phone_number"
                     required
+                    value={formData.phone_number}
+                    onChange={handleInputChange}
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
                     placeholder="010-0000-0000"
                   />
@@ -99,7 +176,10 @@ export default function Signup() {
                   </div>
                   <input 
                     type="email" 
+                    name="email"
                     required
+                    value={formData.email}
+                    onChange={handleInputChange}
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
                     placeholder="name@healus.com"
                   />
@@ -115,7 +195,10 @@ export default function Signup() {
                 </div>
                 <input 
                   type="password" 
+                  name="password"
                   required
+                  value={formData.password}
+                  onChange={handleInputChange}
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
                   placeholder="••••••••"
                 />
@@ -128,7 +211,10 @@ export default function Signup() {
               </label>
               <input 
                 type="text" 
+                name="pump_id"
                 required
+                value={formData.pump_id}
+                onChange={handleInputChange}
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all text-gray-700 font-medium placeholder-gray-400"
                 placeholder="16byte 고유 식별자 입력 (예: 1234567890ABCDEF)"
               />
@@ -158,14 +244,14 @@ export default function Signup() {
 
             <button 
               type="submit"
-              disabled={!agreed}
+              disabled={!agreed || loading}
               className={`w-full py-4 font-bold rounded-xl transform transition-all shadow-lg mt-6 ${
-                agreed 
+                agreed && !loading
                   ? "bg-[#17409c] text-white hover:bg-blue-800 active:scale-[0.98]" 
                   : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
               }`}
             >
-              계정 만들기
+              {loading ? "계정 생성 중..." : "계정 만들기"}
             </button>
           </form>
         </div>

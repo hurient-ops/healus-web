@@ -34,19 +34,18 @@ export default function AIChatWidget() {
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await axios.post('http://localhost:8000/api/web/chat', {
-        messages: newMessages.filter(m => m.role !== 'system')
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const response = await axios.post('/api/chat', {
+        message: input.trim(),
+        history: messages.filter(m => m.role !== 'system').map(m => ({
+          sender: m.role,
+          text: m.content
+        }))
       });
       
-      if (response.data.status === 'success') {
-        setMessages([...newMessages, { role: 'assistant', content: response.data.response }]);
+      if (response.data.reply) {
+        setMessages([...newMessages, { role: 'assistant', content: response.data.reply }]);
       } else {
-        setMessages([...newMessages, { role: 'assistant', content: response.data.response || '오류가 발생했습니다.' }]);
+        setMessages([...newMessages, { role: 'assistant', content: response.data.error || '오류가 발생했습니다.' }]);
       }
     } catch (error) {
       console.error('Chat API Error:', error);

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Lock, Mail, Activity } from 'lucide-react';
-import axios from 'axios';
+import { supabase } from '../lib/supabase';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,23 +18,35 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/login', {
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
 
-      if (response.data.status === 'success') {
-        localStorage.setItem('access_token', response.data.access_token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (error) throw error;
+
+      if (data.session && data.user) {
+        // 기존 코드 호환성을 위해 localStorage에도 임시 저장 (추후 전역 상태나 Context API로 변경 권장)
+        localStorage.setItem('access_token', data.session.access_token);
+        
+        // users 테이블에서 추가 정보 가져오기
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+          
+        if (userData) {
+          localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+          localStorage.setItem('user', JSON.stringify({ email: data.user.email, id: data.user.id }));
+        }
+        
         localStorage.setItem('isLoggedIn', 'true');
         navigate(redirectPath);
       }
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.detail) {
-        setErrorMsg(error.response.data.detail);
-      } else {
-        setErrorMsg('로그인 중 서버 오류가 발생했습니다.');
-      }
+      setErrorMsg(error.message || '로그인 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
     }
