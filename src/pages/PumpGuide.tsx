@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Activity, Battery, Zap, AlertCircle, Utensils } from 'lucide-react';
+import Header from '../components/Header';
 
 export default function PumpGuide() {
   useEffect(() => {
@@ -11,37 +12,12 @@ export default function PumpGuide() {
     <div className="min-h-screen bg-gray-50 pb-24 font-sans">
       
       {/* Global Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-orange-600 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center shadow-sm">
-              <Activity className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight font-serif">Healus</span>
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-8 font-normal text-gray-600">
-            <Link to="/diabetes" className="hover:text-[#17409c] transition-colors">당뇨병의 이해</Link>
-            <Link to="/diet" className="hover:text-[#1cb085] transition-colors">식단 관리</Link>
-            <Link to="/pump-guide" className="hover:text-orange-600 transition-colors">펌프 가이드</Link>
-            <Link to="/complications" className="hover:text-red-600 transition-colors">합병증 예방</Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Link to="/signup" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-orange-600 hover:text-orange-600 transition-all shadow-sm">
-              회원가입
-            </Link>
-            <Link to="/login" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-orange-600 hover:text-orange-600 transition-all shadow-sm">
-              로그인
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop" 
+          src="/images/user_pump_hero.png"
           alt="인슐린 펌프" 
           className="absolute inset-0 w-full h-full object-cover"
         />

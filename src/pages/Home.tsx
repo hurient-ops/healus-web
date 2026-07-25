@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Activity, Brain, ShieldCheck, ChevronRight, ChevronLeft } from 'lucide-react';
+import Header from '../components/Header';
 
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop",
+    image: "/images/hero_home_1.jpg",
     title: "스마트 당뇨 관리 솔루션",
     heading: <>나만의 혈당 리듬,<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Healus</span>와 함께 완벽하게.</>,
     desc: "인슐린 펌프 데이터와 AI 통찰력이 만나, 당신의 하루를 더 안전하고 자유롭게 만듭니다. 지금 바로 과학적인 혈당 관리를 시작하세요."
   },
   {
-    image: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?q=80&w=2000&auto=format&fit=crop",
+    image: "/images/hero_home_2.jpg",
     title: "100% 실데이터 분석",
     heading: <>모든 라이프로그를,<br/>하나의 <span className="text-blue-400">대시보드</span>에서.</>,
     desc: "혈당 수치(CGM), 식사량, 수면 시간, 스트레스, 운동 기록까지. 흩어져 있던 당신의 모든 생체 데이터를 Healus가 하나로 모아 분석합니다."
   },
   {
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2000&auto=format&fit=crop",
+    image: "/images/hero_home_3.jpg",
     title: "초개인화 AI 주치의",
     heading: <>분석 과정을 <span className="text-emerald-400">투명하게</span>,<br/>결과는 더 정확하게.</>,
     desc: "주말 회식 패턴, 수면 부족에 따른 인슐린 저항성 증가 등 숨겨진 원인을 인공지능이 찾아내고, 추론 과정을 투명하게 시각화하여 제공합니다."
@@ -25,11 +26,17 @@ const slides = [
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000); // 5초마다 자동 슬라이드
+    
+    // 로그인 상태 확인
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+
     return () => clearInterval(timer);
   }, []);
 
@@ -40,36 +47,10 @@ export default function Home() {
     <div className="min-h-screen bg-[var(--color-background)] flex flex-col font-sans">
       
       {/* Global Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-[#17409c] hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-[#17409c] rounded-xl flex items-center justify-center shadow-sm">
-              <Activity className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight font-serif">Healus</span>
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-8 font-normal text-gray-600">
-            <Link to="/diabetes" className="hover:text-[#17409c] transition-colors">당뇨병의 이해</Link>
-            <Link to="/diet" className="hover:text-[#1cb085] transition-colors">식단 관리</Link>
-            <Link to="/pump-guide" className="hover:text-orange-600 transition-colors">펌프 가이드</Link>
-            <Link to="/complications" className="hover:text-red-600 transition-colors">합병증 예방</Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            {/* 개선: Pill 스타일 및 동일한 색상 반전 없음 */}
-            <Link to="/signup" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm">
-              회원가입
-            </Link>
-            <Link to="/login" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm">
-              로그인
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section (Carousel) */}
-      <section className="relative w-full h-[650px] flex items-center bg-gray-900 overflow-hidden group">
+      <section className="relative w-full h-[850px] flex items-center bg-gray-900 overflow-hidden group">
         
         {/* Carousel Backgrounds */}
         {slides.map((slide, index) => (
@@ -119,7 +100,7 @@ export default function Home() {
               <p className="text-xl text-gray-300 mb-10 leading-relaxed font-light drop-shadow-md">
                 {slide.desc}
               </p>
-              <Link to="/login" className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#17409c] font-bold rounded-full hover:bg-gray-100 transition-all shadow-2xl hover:scale-105">
+              <Link to={isLoggedIn ? "/dashboard" : "/login"} className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#17409c] font-bold rounded-full hover:bg-gray-100 transition-all shadow-2xl hover:scale-105">
                 나만의 당뇨관리 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
@@ -132,7 +113,7 @@ export default function Home() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/4"></div>
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16 relative z-10">
           <div className="w-full md:w-1/2">
-            <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=1000&auto=format&fit=crop" alt="AI 주치의" className="w-full rounded-[2rem] shadow-2xl hover:scale-[1.02] transition-transform duration-500" />
+            <img src="/images/ai_doctor_v2.jpg" alt="AI 주치의" className="w-full aspect-square object-cover rounded-[2rem] shadow-2xl hover:scale-[1.02] transition-transform duration-500" />
           </div>
           <div className="w-full md:w-1/2">
             <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mb-8 shadow-sm">
@@ -165,7 +146,7 @@ export default function Home() {
             </p>
           </div>
           <div className="w-full md:w-1/2">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" alt="데이터 연동" className="w-full rounded-[2rem] shadow-2xl hover:scale-[1.02] transition-transform duration-500" />
+            <img src="/images/platform.jpg" alt="플랫폼" className="w-full aspect-square object-cover rounded-[2rem] shadow-2xl hover:scale-[1.02] transition-transform duration-500" />
           </div>
         </div>
       </section>

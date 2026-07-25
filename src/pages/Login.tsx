@@ -1,17 +1,43 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Lock, Mail, Activity } from 'lucide-react';
+import axios from 'axios';
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPath = location.state?.redirect || '/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Dummy login: proceed regardless of input
-    localStorage.setItem('isLoggedIn', 'true');
-    navigate('/dashboard');
+    setErrorMsg('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/auth/login', {
+        email,
+        password
+      });
+
+      if (response.data.status === 'success') {
+        localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('isLoggedIn', 'true');
+        navigate(redirectPath);
+      }
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.detail) {
+        setErrorMsg(error.response.data.detail);
+      } else {
+        setErrorMsg('로그인 중 서버 오류가 발생했습니다.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,10 +73,15 @@ export default function Login() {
               <span className="text-3xl font-bold tracking-tight font-serif">Healus</span>
             </Link>
             <h2 className="text-2xl font-bold mb-2">다시 오신 것을 환영합니다!</h2>
-            <p className="text-[var(--color-text-muted)]">서비스 이용을 위해 로그인해 주세요. (테스트 버전: 아무 값이나 입력해도 접속됩니다)</p>
+            <p className="text-[var(--color-text-muted)]">서비스 이용을 위해 로그인해 주세요. <br/><span className="text-blue-500 font-medium">(테스트용 계정: testuser@healus.com / password123)</span></p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
+            {errorMsg && (
+              <div className="p-3 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">
+                {errorMsg}
+              </div>
+            )}
             <div>
               <label className="block text-sm font-bold text-[var(--color-text)] mb-2">이메일</label>
               <div className="relative">
@@ -93,9 +124,10 @@ export default function Login() {
 
             <button 
               type="submit"
-              className="w-full py-4 bg-[var(--color-primary)] text-white font-bold rounded-xl hover:bg-[var(--color-primary-light)] transform active:scale-[0.98] transition-all shadow-lg"
+              disabled={loading}
+              className="w-full py-4 bg-[var(--color-primary)] text-white font-bold rounded-xl hover:bg-[var(--color-primary-light)] transform active:scale-[0.98] transition-all shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              로그인
+              {loading ? '로그인 중...' : '로그인'}
             </button>
           </form>
 

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Activity, Info, ShieldCheck } from 'lucide-react';
+import Header from '../components/Header';
 
 export default function Diabetes() {
   useEffect(() => {
@@ -11,37 +12,12 @@ export default function Diabetes() {
     <div className="min-h-screen bg-gray-50 pb-24 font-sans">
       
       {/* Global Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-[#17409c] hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-[#17409c] rounded-xl flex items-center justify-center shadow-sm">
-              <Activity className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight font-serif">Healus</span>
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-8 font-normal text-gray-600">
-            <Link to="/diabetes" className="hover:text-[#17409c] transition-colors">당뇨병의 이해</Link>
-            <Link to="/diet" className="hover:text-[#1cb085] transition-colors">식단 관리</Link>
-            <Link to="/pump-guide" className="hover:text-orange-600 transition-colors">펌프 가이드</Link>
-            <Link to="/complications" className="hover:text-red-600 transition-colors">합병증 예방</Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Link to="/signup" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm">
-              회원가입
-            </Link>
-            <Link to="/login" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm">
-              로그인
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?q=80&w=2000&auto=format&fit=crop" 
+          src="/images/diabetes_hero_final.png" 
           alt="혈당 측정하는 모습" 
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -83,7 +59,7 @@ export default function Diabetes() {
               </div>
             </div>
             <div className="relative h-64 md:h-auto">
-              <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1000&auto=format&fit=crop" alt="인슐린 펌프" className="absolute inset-0 w-full h-full object-cover" />
+              <img src="/images/type1.jpg" alt="인슐린 펌프" className="absolute inset-0 w-full h-full object-cover" />
             </div>
           </div>
         </article>
@@ -92,7 +68,7 @@ export default function Diabetes() {
         <article className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden mb-12">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="relative h-64 md:h-auto order-2 md:order-1">
-              <img src="https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=1000&auto=format&fit=crop" alt="성인 당뇨" className="absolute inset-0 w-full h-full object-cover" />
+              <img src="/images/type2.jpg" alt="성인 당뇨" className="absolute inset-0 w-full h-full object-cover" />
             </div>
             <div className="p-12 flex flex-col justify-center order-1 md:order-2">
               <span className="text-[#1cb085] font-bold tracking-widest text-sm mb-4">TYPE 2 DIABETES</span>
@@ -118,7 +94,7 @@ export default function Diabetes() {
             <p className="text-gray-600 leading-relaxed mb-6 relative z-10">
               임신 중 처음 발견되거나 발생한 당내성 이상입니다. 임신 중 태아에서 분비되는 호르몬에 의해 인슐린 저항성이 커져 발생하며, 출산 후 대부분 정상으로 돌아오지만 차후 2형 당뇨 발병 위험이 매우 높습니다.
             </p>
-            <img src="https://images.unsplash.com/photo-1581594549595-35f6edc7b762?q=80&w=800&auto=format&fit=crop" alt="임산부" className="w-full h-48 object-cover rounded-xl mt-4" />
+            <img src="/images/gestational.jpg" alt="임산부" className="w-full h-48 object-cover rounded-xl mt-4" />
           </div>
 
           <div className="bg-gray-900 p-10 rounded-[2rem] shadow-sm border border-gray-800 text-white flex flex-col justify-center">

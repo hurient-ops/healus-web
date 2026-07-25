@@ -1,14 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus } from 'lucide-react';
+import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown } from 'lucide-react';
+import { toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
 import axios from 'axios';
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   BarChart, Bar
 } from 'recharts';
+import AIChatWidget from '../components/AIChatWidget';
 
 const api = axios.create({ baseURL: 'http://localhost:8000/api/web' });
+
+// Add interceptor to attach JWT token if available
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 interface BgLog {
   value: number;
@@ -64,7 +76,7 @@ export default function Dashboard() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await api.get('/dashboard?email=testuser@healus.com');
+      const res = await api.get('/dashboard');
       setData(res.data.data);
     } catch (e) {
       console.error(e);
@@ -73,7 +85,7 @@ export default function Dashboard() {
 
   const fetchAiInsight = async () => {
     try {
-      const res = await api.get('/ai-insight?email=testuser@healus.com');
+      const res = await api.get('/ai-insight');
       setAiData(res.data);
     } catch (e) {
       console.error(e);
@@ -84,6 +96,61 @@ export default function Dashboard() {
     fetchDashboard();
     fetchAiInsight();
   }, []);
+
+  const handleCapture = async () => {
+    console.log("handleCapture called!");
+    const element = document.getElementById('dashboard-content');
+    if (!element) {
+      console.error("No element found!");
+      alert("대시보드 영역을 찾을 수 없습니다.");
+      return;
+    }
+    try {
+      console.log("Starting html-to-image toPng...");
+      const image = await toPng(element, { pixelRatio: 2 });
+      console.log("toPng success! Creating link...");
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `healus_dashboard_${new Date().toISOString().slice(0, 10)}.png`;
+      document.body.appendChild(link); // Required for some browsers
+      link.click();
+      document.body.removeChild(link);
+      console.log("Download triggered.");
+    } catch (e) {
+      console.error("Capture failed:", e);
+      alert("캡쳐 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleReport = async () => {
+    console.log("handleReport called!");
+    const element = document.getElementById('dashboard-content');
+    if (!element) {
+      console.error("No element found!");
+      alert("대시보드 영역을 찾을 수 없습니다.");
+      return;
+    }
+    try {
+      console.log("Starting html-to-image toPng for PDF...");
+      const imgData = await toPng(element, { pixelRatio: 2 });
+      console.log("Image data generated. Starting jsPDF...");
+      
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      
+      // Calculate height maintaining aspect ratio from DOM dimensions
+      const elWidth = element.clientWidth;
+      const elHeight = element.clientHeight;
+      const pdfHeight = (elHeight * pdfWidth) / elWidth;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`healus_report_${new Date().toISOString().slice(0, 10)}.pdf`);
+      console.log("PDF download triggered.");
+    } catch (e) {
+      console.error("PDF generation failed:", e);
+      alert("PDF 생성 중 오류가 발생했습니다.");
+    }
+  };
 
   const pumpLogs = data?.pump_logs || [];
   
@@ -196,7 +263,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-10 relative z-10">
+      <main id="dashboard-content" className="max-w-7xl mx-auto px-6 py-10 relative z-10 bg-gray-50">
         <div className="mb-10 flex justify-between items-end">
           <div>
             <h2 className="text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight">
@@ -204,13 +271,31 @@ export default function Dashboard() {
             </h2>
             <p className="text-gray-500 font-medium">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-[#17409c] text-white font-bold rounded-full hover:bg-blue-800 transition-colors shadow-lg flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5"/>
-            수동 기록
-          </button>
+          <div className="flex gap-3">
+            <button 
+              onClick={handleCapture}
+              className="px-4 py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2"
+              title="화면 캡쳐"
+            >
+              <Camera className="w-5 h-5"/>
+              <span className="hidden sm:inline">화면 캡쳐</span>
+            </button>
+            <button 
+              onClick={handleReport}
+              className="px-4 py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2"
+              title="레포트 PDF"
+            >
+              <FileDown className="w-5 h-5"/>
+              <span className="hidden sm:inline">레포트 PDF</span>
+            </button>
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="px-6 py-3 bg-[#17409c] text-white font-bold rounded-full hover:bg-blue-800 transition-colors shadow-lg flex items-center gap-2 ml-2"
+            >
+              <Plus className="w-5 h-5"/>
+              수동 기록
+            </button>
+          </div>
         </div>
 
         {/* 1. TOP ROW: 5 Gauge Charts */}
@@ -395,6 +480,8 @@ export default function Dashboard() {
           }}
         />
       )}
+      
+      <AIChatWidget />
     </div>
   );
 }
@@ -415,7 +502,6 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
     setLoading(true);
     try {
       await api.post('/bg-log', {
-        user_email: 'testuser@healus.com',
         glucose_value: value,
         tag: tag,
         recorded_at: new Date(datetime).toISOString()

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck, Eye, Heart, Activity } from 'lucide-react';
+import Header from '../components/Header';
 
 export default function Complications() {
   useEffect(() => {
@@ -11,37 +12,12 @@ export default function Complications() {
     <div className="min-h-screen bg-gray-50 pb-24 font-sans">
       
       {/* Global Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-red-600 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center shadow-sm">
-              <Activity className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight font-serif">Healus</span>
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-8 font-normal text-gray-600">
-            <Link to="/diabetes" className="hover:text-[#17409c] transition-colors">당뇨병의 이해</Link>
-            <Link to="/diet" className="hover:text-[#1cb085] transition-colors">식단 관리</Link>
-            <Link to="/pump-guide" className="hover:text-orange-600 transition-colors">펌프 가이드</Link>
-            <Link to="/complications" className="hover:text-red-600 transition-colors">합병증 예방</Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Link to="/signup" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-red-600 hover:text-red-600 transition-all shadow-sm">
-              회원가입
-            </Link>
-            <Link to="/login" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-red-600 hover:text-red-600 transition-all shadow-sm">
-              로그인
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2000&auto=format&fit=crop" 
+          src="/images/comp_hero_original.jpg" 
           alt="의사와 상담하는 환자" 
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -75,7 +51,7 @@ export default function Complications() {
           {/* Eye */}
           <article className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row">
             <div className="md:w-1/3 relative h-64 md:h-auto">
-               <img src="https://images.unsplash.com/photo-1579684453423-f84349ef60b0?q=80&w=800&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover" alt="안과 검진"/>
+               <img src="/images/comp_eye.jpg" className="absolute inset-0 w-full h-full object-cover" alt="안과 검진"/>
             </div>
             <div className="p-10 md:w-2/3 flex flex-col justify-center">
               <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
@@ -91,7 +67,7 @@ export default function Complications() {
           {/* Kidney */}
           <article className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row">
             <div className="md:w-1/3 relative h-64 md:h-auto md:order-2">
-               <img src="https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=800&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover" alt="신장 검사"/>
+               <img src="/images/comp_kidney.jpg" className="absolute inset-0 w-full h-full object-cover" alt="신장 검사"/>
             </div>
             <div className="p-10 md:w-2/3 flex flex-col justify-center md:order-1">
               <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
@@ -107,7 +83,7 @@ export default function Complications() {
           {/* Foot / Nerves */}
           <article className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row">
             <div className="md:w-1/3 relative h-64 md:h-auto">
-               <img src="https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?q=80&w=800&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover" alt="신경 검사"/>
+               <img src="/images/comp_nerve.jpg" className="absolute inset-0 w-full h-full object-cover" alt="신경 검사"/>
             </div>
             <div className="p-10 md:w-2/3 flex flex-col justify-center">
               <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">

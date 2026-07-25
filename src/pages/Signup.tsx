@@ -1,23 +1,24 @@
-
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, User, Mail, Lock, Smartphone, Activity } from 'lucide-react';
+import { ArrowLeft, User, Mail, Lock, Smartphone, Activity, Calendar, Phone, CheckCircle2 } from 'lucide-react';
 
 export default function Signup() {
   const navigate = useNavigate();
+  const [agreed, setAgreed] = useState(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6 relative overflow-hidden">
       {/* Background aesthetics */}
       <div className="absolute inset-0 z-0">
-         <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2000&auto=format&fit=crop" className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+         <img src="/images/signup_1.jpg" className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
       </div>
 
       <div className="w-full max-w-5xl flex rounded-3xl overflow-hidden shadow-2xl bg-white relative z-10 border border-gray-100">
         
         {/* Left Side - Image */}
         <div className="hidden lg:block lg:w-1/2 relative bg-[#17409c]">
-          <img 
-            src="https://images.unsplash.com/photo-1550831107-1553da8c8464?q=80&w=1000&auto=format&fit=crop" 
+          <img
+            src="/images/signup_2.jpg"  
             alt="건강한 라이프스타일" 
             className="w-full h-full object-cover opacity-60 mix-blend-overlay"
           />
@@ -44,43 +45,77 @@ export default function Signup() {
 
 
 
-          <form onSubmit={(e) => { e.preventDefault(); navigate('/login'); }} className="space-y-5">
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">이름</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                  <User className="w-5 h-5" />
+          <form onSubmit={(e) => { e.preventDefault(); if (agreed) navigate('/login'); }} className="space-y-5">
+            <div className="flex gap-4">
+              <div className="w-1/2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">이름 *</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                    <User className="w-5 h-5" />
+                  </div>
+                  <input 
+                    type="text" 
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
+                    placeholder="홍길동"
+                  />
                 </div>
-                <input 
-                  type="text" 
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
-                  placeholder="홍길동"
-                />
+              </div>
+              <div className="w-1/2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">생년월일 *</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                    <Calendar className="w-5 h-5" />
+                  </div>
+                  <input 
+                    type="date" 
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all text-gray-700"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-1/2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">핸드폰 번호 *</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <input 
+                    type="tel" 
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
+                    placeholder="010-0000-0000"
+                  />
+                </div>
+              </div>
+              <div className="w-1/2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">이메일 *</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <input 
+                    type="email" 
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
+                    placeholder="name@healus.com"
+                  />
+                </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">이메일</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <input 
-                  type="email" 
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
-                  placeholder="name@healus.com"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">비밀번호</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2">비밀번호 *</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
                   <Lock className="w-5 h-5" />
                 </div>
                 <input 
                   type="password" 
+                  required
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all"
                   placeholder="••••••••"
                 />
@@ -89,19 +124,46 @@ export default function Signup() {
 
             <div className="pt-2">
               <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-1">
-                 <Smartphone className="w-4 h-4 text-[#17409c]"/> Healus 인슐린 펌프 기기 연동
+                 <Smartphone className="w-4 h-4 text-[#17409c]"/> 기기 PID (Pump ID) *
               </label>
               <input 
                 type="text" 
+                required
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all text-gray-700 font-medium placeholder-gray-400"
-                placeholder="기기 뒷면의 S/N 또는 MAC 주소 입력 (예: 00:1A:2B:3C:4D:5E)"
+                placeholder="16byte 고유 식별자 입력 (예: 1234567890ABCDEF)"
               />
-              <p className="text-xs text-gray-400 mt-2 ml-1 whitespace-nowrap tracking-tighter">* Healus 펌프의 기기 고유 번호를 입력하시면 가입 후 즉시 연동됩니다.</p>
+              <p className="text-xs text-gray-500 mt-2 ml-1 leading-relaxed break-keep">
+                * 모바일 앱에서 전송된 데이터를 확인하기 위해 펌프의 고유 식별자를 반드시 입력해 주세요.<br/>
+                (모바일 앱 로그인 시 해당 PID와 계정이 안전하게 연동됩니다.)
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex items-center justify-center mt-0.5">
+                  <input 
+                    type="checkbox" 
+                    className="peer sr-only"
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                  />
+                  <div className="w-5 h-5 border-2 border-gray-300 rounded peer-checked:bg-[#17409c] peer-checked:border-[#17409c] transition-colors"></div>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-white absolute opacity-0 peer-checked:opacity-100 transition-opacity" />
+                </div>
+                <span className="text-sm text-gray-700 leading-snug">
+                  <span className="font-bold text-[#17409c]">[필수]</span> 개인정보 및 민감정보(건강정보) 수집 및 이용에 동의합니다.
+                </span>
+              </label>
             </div>
 
             <button 
               type="submit"
-              className="w-full py-4 bg-[#17409c] text-white font-bold rounded-xl hover:bg-blue-800 transform active:scale-[0.98] transition-all shadow-lg mt-6"
+              disabled={!agreed}
+              className={`w-full py-4 font-bold rounded-xl transform transition-all shadow-lg mt-6 ${
+                agreed 
+                  ? "bg-[#17409c] text-white hover:bg-blue-800 active:scale-[0.98]" 
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+              }`}
             >
               계정 만들기
             </button>
