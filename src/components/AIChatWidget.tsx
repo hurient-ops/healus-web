@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
+import { X, Send, Loader2, Bot } from 'lucide-react';
 import axios from 'axios';
 
 interface Message {

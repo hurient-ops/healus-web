@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ArrowLeft, Lock, Mail, Activity } from 'lucide-react';
+import { Lock, Mail, Activity } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function Login() {
@@ -30,7 +30,7 @@ export default function Login() {
         localStorage.setItem('access_token', data.session.access_token);
         
         // users 테이블에서 추가 정보 가져오기
-        const { data: userData, error: userError } = await supabase
+        const { data: userData } = await supabase
           .from('users')
           .select('*')
           .eq('id', data.user.id)

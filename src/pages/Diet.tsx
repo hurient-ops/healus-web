@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Utensils, Coffee, Activity } from 'lucide-react';
+import { ArrowLeft, Utensils, Coffee } from 'lucide-react';
 import Header from '../components/Header';
 
 export default function Diet() {

@@ -415,7 +415,7 @@ export default function SampleDashboard() {
           onClose={() => setIsModalOpen(false)} 
           onSuccess={() => {
             setIsModalOpen(false);
-            fetchDashboard();
+            // fetchDashboard();
           }}
         />
       )}
