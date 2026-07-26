@@ -15,10 +15,10 @@ export default function PumpGuide() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-gray-900">
+      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <img 
           src="/images/user_pump_hero.png"
-          alt="?�슐�??�프" 
+          alt="인슐린 펌프" 
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -27,9 +27,9 @@ export default function PumpGuide() {
           <div className="w-16 h-16 bg-orange-600/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 border border-orange-500/30">
             <Activity className="w-8 h-8 text-orange-300" />
           </div>
-          <h1 className="text-5xl font-bold text-white mb-6 tracking-tight font-serif">?�마?�한 ?�슐�??�프 ?�용�?/h1>
+          <h1 className="text-5xl font-bold text-white mb-6 tracking-tight font-serif">스마트한 인슐린 펌프 사용법</h1>
           <p className="text-xl text-gray-300 font-light leading-relaxed">
-            ?�공 췌장???�한 첫걸?? 기초 주입�??�사 주입??차이�??�해?�고, 발생 가?�한 기기 ?�람???�황?��? ?�고 ?�처하??방법???��?보세??
+            인공 췌장을 향한 첫걸음. 기초 주입과 식사 주입의 차이를 이해하고, 발생 가능한 기기 알람에 당황하지 않고 대처하는 방법을 익혀보세요.
           </p>
         </div>
       </section>
@@ -39,7 +39,7 @@ export default function PumpGuide() {
         
         <div className="mb-12">
           <Link to="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-orange-600 transition-colors font-bold">
-            <ArrowLeft className="w-5 h-5" /> 메인?�로 ?�아가�?
+            <ArrowLeft className="w-5 h-5" /> 메인으로 돌아가기
           </Link>
         </div>
 
@@ -51,10 +51,10 @@ export default function PumpGuide() {
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
                 <Zap className="w-6 h-6 text-blue-500" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">기초 주입??(Basal)</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">기초 주입량 (Basal)</h2>
               <p className="text-gray-600 leading-relaxed mb-6 flex-1">
-                24?�간 ?�안 지?�적?�로 조금???�어가???�슐린입?�다. ?�사�??��? ?�을 ?�도 ?�리 몸�? ?�너지�??�요�??�며, ?�때 발생?�는 ?�당 ?�승??막아줍니?? 
-                개인???�활 ?�턴(?�간, ?�동 ???????�라 ?�간?�별로 촘촘?�게 ?�정?????�는 것이 ?�프??최�? ?�점?�니??
+                24시간 동안 지속적으로 조금씩 들어가는 인슐린입니다. 식사를 하지 않을 때도 우리 몸은 에너지를 필요로 하며, 이때 발생하는 혈당 상승을 막아줍니다. 
+                개인의 생활 패턴(야간, 운동 시 등)에 따라 시간대별로 촘촘하게 설정할 수 있는 것이 펌프의 최대 장점입니다.
               </p>
             </div>
           </article>
@@ -65,10 +65,10 @@ export default function PumpGuide() {
               <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mb-6">
                 <Utensils className="w-6 h-6 text-orange-500" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">?�사 주입??(Bolus)</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">식사 주입량 (Bolus)</h2>
               <p className="text-gray-600 leading-relaxed mb-6 flex-1">
-                ?�사�??�거??간식??먹을 ???�어???�수?�물??처리?�기 ?�해 ??번에 주입?�는 ?�슐린입?�다. 
-                먹을 ?�식???�수?�물 ?�을 계산?�고, ?�재 ?�당 ?�치�?고려?�여 ?�프??'?�사 주입 계산�?�??�용?�면 ?�씬 ?��????�여가 가?�합?�다.
+                식사를 하거나 간식을 먹을 때 들어온 탄수화물을 처리하기 위해 한 번에 주입하는 인슐린입니다. 
+                먹을 음식의 탄수화물 양을 계산하고, 현재 혈당 수치를 고려하여 펌프의 '식사 주입 계산기'를 활용하면 훨씬 정밀한 투여가 가능합니다.
               </p>
             </div>
           </article>
@@ -82,7 +82,7 @@ export default function PumpGuide() {
           
           <div className="relative z-10">
             <h3 className="text-3xl font-bold mb-8 font-serif text-red-900 flex items-center gap-3">
-              <AlertCircle className="w-8 h-8"/> ?�프 ?�람, ?�황?��? 마세??
+              <AlertCircle className="w-8 h-8"/> 펌프 알람, 당황하지 마세요
             </h3>
             
             <div className="space-y-6">
@@ -91,10 +91,10 @@ export default function PumpGuide() {
                   <span className="text-red-600 font-bold">1</span>
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold text-red-900 mb-2">막힘(Occlusion) ?�람</h4>
+                  <h4 className="text-lg font-bold text-red-900 mb-2">막힘(Occlusion) 알람</h4>
                   <p className="text-gray-700 leading-relaxed">
-                    주사 바늘(캐뉼????꺾이거나 ?�액/조직???�으�?막�? ?�슐린이 ?��?�??�어가지 못할 ??발생?�니?? 즉시 ?�로??주사 부?�로 교체?�야 ?�니?? 
-                    방치 ??급성 케?�산?�증?�로 ?�어�????�어 가??주의?�야 ?�니??
+                    주사 바늘(캐뉼라)이 꺾이거나 혈액/조직액 등으로 막혀 인슐린이 제대로 들어가지 못할 때 발생합니다. 즉시 새로운 주사 부위로 교체해야 합니다. 
+                    방치 시 급성 케톤산혈증으로 이어질 수 있어 가장 주의해야 합니다.
                   </p>
                 </div>
               </div>
@@ -104,9 +104,9 @@ export default function PumpGuide() {
                   <Battery className="w-5 h-5 text-yellow-600" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold text-red-900 mb-2">배터�?부�??�람</h4>
+                  <h4 className="text-lg font-bold text-red-900 mb-2">배터리 부족 알람</h4>
                   <p className="text-gray-700 leading-relaxed">
-                    ?�순???�람?��?�? 무시?�고 ?�다가 ?�프가 꺼�?�?밤새 ?�슐린이 주입?��? ?�아 ?�침??고혈???�크가 ?????�습?�다. ?�람???�리�?즉시 충전?�거??건전지�?교체?�세??
+                    단순한 알람이지만, 무시하고 자다가 펌프가 꺼지면 밤새 인슐린이 주입되지 않아 아침에 고혈당 쇼크가 올 수 있습니다. 알람이 울리면 즉시 충전하거나 건전지를 교체하세요.
                   </p>
                 </div>
               </div>
@@ -118,4 +118,3 @@ export default function PumpGuide() {
     </div>
   );
 }
-
