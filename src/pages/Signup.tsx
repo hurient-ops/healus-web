@@ -30,6 +30,10 @@ export default function Signup() {
     setErrorMsg('');
 
     try {
+      if (formData.pump_id.length !== 16) {
+        throw new Error("기기 PID(Pump ID)는 반드시 16자리 문자여야 합니다.");
+      }
+
       // 1. Supabase Auth 계정 생성
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email.trim(),
@@ -213,10 +217,12 @@ export default function Signup() {
                 type="text" 
                 name="pump_id"
                 required
+                maxLength={16}
+                minLength={16}
                 value={formData.pump_id}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#17409c] focus:ring-1 focus:ring-[#17409c] transition-all text-gray-700 font-medium placeholder-gray-400"
-                placeholder="16byte 고유 식별자 입력 (예: 1234567890ABCDEF)"
+                placeholder="16자리 문자(예: 1234567890ABCDEF)"
               />
               <p className="text-xs text-gray-500 mt-2 ml-1 leading-relaxed break-keep">
                 * 모바일 앱에서 전송된 데이터를 확인하기 위해 펌프의 고유 식별자를 반드시 입력해 주세요.<br/>
