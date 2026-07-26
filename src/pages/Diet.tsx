@@ -15,10 +15,10 @@ export default function Diet() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-gray-900">
         <img 
           src="/images/diet.png" 
-          alt="신선한 샐러드와 건강한 식단" 
+          alt="?�선???�러?��? 건강???�단" 
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -27,9 +27,9 @@ export default function Diet() {
           <div className="w-16 h-16 bg-[#1cb085]/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#1cb085]/30">
             <Utensils className="w-8 h-8 text-emerald-300" />
           </div>
-          <h1 className="text-5xl font-bold text-white mb-6 tracking-tight font-serif">올바른 식단 관리</h1>
+          <h1 className="text-5xl font-bold text-white mb-6 tracking-tight font-serif">?�바�??�단 관�?/h1>
           <p className="text-xl text-gray-300 font-light leading-relaxed">
-            먹는 즐거움을 포기할 필요는 없습니다. 혈당 스파이크를 막는 거꾸로 식사법과 탄수화물 계량법을 통해 맛있고 건강한 하루를 설계하세요.
+            먹는 즐거?�???�기???�요???�습?�다. ?�당 ?�파?�크�?막는 거꾸�??�사법과 ?�수?�물 계량법을 ?�해 맛있�?건강???�루�??�계?�세??
           </p>
         </div>
       </section>
@@ -39,7 +39,7 @@ export default function Diet() {
         
         <div className="mb-12">
           <Link to="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-[#1cb085] transition-colors font-bold">
-            <ArrowLeft className="w-5 h-5" /> 메인으로 돌아가기
+            <ArrowLeft className="w-5 h-5" /> 메인?�로 ?�아가�?
           </Link>
         </div>
 
@@ -48,15 +48,15 @@ export default function Diet() {
           {/* Item 1 */}
           <article className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden group">
             <div className="relative h-64 overflow-hidden">
-              <img src="/images/diet_1.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="거꾸로 식사법" />
+              <img src="/images/diet_1.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="거꾸�??�사�? />
               <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold text-[#1cb085]">
                 RULE 1
               </div>
             </div>
             <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">거꾸로 식사법 (채.단.탄)</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">거꾸�??�사�?(�?????</h2>
               <p className="text-gray-600 leading-relaxed mb-6">
-                식이섬유가 풍부한 채소를 먼저 먹고, 그 다음 단백질(고기/생선), 마지막으로 탄수화물(밥/빵)을 섭취하세요. 식이섬유가 위벽을 코팅하여 당의 흡수를 늦춰줍니다.
+                ?�이?�유가 ?��???채소�?먼�? 먹고, �??�음 ?�백�?고기/?�선), 마�?막으�??�수?�물(�?�?????��?�세?? ?�이?�유가 ?�벽??코팅?�여 ?�의 ?�수�???��줍니??
               </p>
             </div>
           </article>
@@ -64,15 +64,15 @@ export default function Diet() {
           {/* Item 2 */}
           <article className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden group">
             <div className="relative h-64 overflow-hidden">
-              <img src="/images/diet_2.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="복합 탄수화물" />
+              <img src="/images/diet_2.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="복합 ?�수?�물" />
               <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold text-orange-600">
                 RULE 2
               </div>
             </div>
             <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">단순당 피하고 복합 탄수화물로</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">?�순???�하�?복합 ?�수?�물�?/h2>
               <p className="text-gray-600 leading-relaxed mb-6">
-                설탕, 과일주스, 흰 빵 등 혈당을 롤러코스터처럼 올리는 단순당 대신, 현미, 귀리, 고구마처럼 천천히 소화되는 복합 탄수화물을 선택하세요.
+                ?�탕, 과일주스, ??�????�당??롤러코스?�처???�리???�순???�?? ?��?, 귀�? 고구마처??천천???�화?�는 복합 ?�수?�물???�택?�세??
               </p>
             </div>
           </article>
@@ -89,12 +89,12 @@ export default function Diet() {
           </div>
           
           <div className="md:w-2/3 relative z-10 text-white text-center md:text-left">
-            <h3 className="text-3xl font-bold mb-4 font-serif">식후 가벼운 산책의 기적</h3>
+            <h3 className="text-3xl font-bold mb-4 font-serif">?�후 가벼운 ?�책??기적</h3>
             <p className="text-emerald-100 text-lg leading-relaxed mb-6">
-              식사 후 가만히 앉아있거나 누워있으면 혈당이 급격히 상승합니다. 식후 15분, 가볍게 집 앞을 걷거나 제자리 걷기를 하는 것만으로도 식후 혈당 수치를 최대 30%까지 낮출 수 있습니다. 인슐린의 작용을 돕는 근육을 움직여주세요.
+              ?�사 ??가만히 ?�아?�거???�워?�으�??�당??급격???�승?�니?? ?�후 15�? 가볍게 �??�을 걷거???�자�?걷기�??�는 것만?�로???�후 ?�당 ?�치�?최�? 30%까�? ??�� ???�습?�다. ?�슐린의 ?�용???�는 근육???�직여주세??
             </p>
             <button className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-xl transition-colors shadow-lg">
-              더 많은 팁 알아보기
+              ??많�? ???�아보기
             </button>
           </div>
         </div>
@@ -103,3 +103,4 @@ export default function Diet() {
     </div>
   );
 }
+
