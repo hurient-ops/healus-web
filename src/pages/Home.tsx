@@ -58,8 +58,8 @@ export default function Home() {
             key={index} 
             className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
           >
-            <img src={slide.image} alt="배경 이미지" className="w-full h-full object-cover opacity-80" />
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/50 to-transparent"></div>
+            <img src={slide.image} alt="배경 이미지" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/20 to-transparent"></div>
           </div>
         ))}
         
