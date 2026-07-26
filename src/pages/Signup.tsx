@@ -59,7 +59,7 @@ export default function Signup() {
       }
 
       // 성공 시 로그인 페이지로
-      alert("회원가입이 완료되었습니다!");
+      alert("회원가입이 접수되었습니다! 안전한 사용을 위해 이메일함으로 보내드린 인증 링크를 꼭 먼저 클릭하신 후 로그인해주세요.");
       navigate('/login');
     } catch (error: any) {
       console.error(error);

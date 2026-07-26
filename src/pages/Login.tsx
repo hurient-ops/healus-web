@@ -23,7 +23,12 @@ export default function Login() {
         password: password.trim(),
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('Email not confirmed')) {
+          throw new Error('이메일 인증이 완료되지 않았습니다. 가입하신 이메일함에서 인증 링크를 먼저 클릭해주세요!');
+        }
+        throw error;
+      }
 
       if (data.session && data.user) {
         // 기존 코드 호환성을 위해 localStorage에도 임시 저장 (추후 전역 상태나 Context API로 변경 권장)
