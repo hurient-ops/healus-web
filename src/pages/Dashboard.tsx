@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown } from 'lucide-react';
+import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import axios from 'axios';
@@ -50,7 +50,9 @@ interface PumpLog {
   sleep_hours: number;
   stress_level: number;
   exercise_hours: number;
+  reception_hours: number;
   event_tags: string | null;
+  notes: string | null;
   error_count: number;
   error_types: string | null;
 }
@@ -77,6 +79,7 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [aiData, setAiData] = useState<AiResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pageOffset, setPageOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -172,6 +175,15 @@ export default function Dashboard() {
   };
 
   const pumpLogs = data?.pump_logs || [];
+  const latestLogs = [...pumpLogs].reverse(); // 최신(어제)이 0번 인덱스
+  
+  // 페이징 계산 (차트용)
+  // pumpLogs는 [과거...최신] 배열
+  const totalDays = pumpLogs.length;
+  const maxPage = Math.max(0, Math.ceil(totalDays / 30) - 1);
+  const startIndex = Math.max(0, totalDays - 30 * (pageOffset + 1));
+  const endIndex = totalDays - 30 * pageOffset;
+  const chartData = pumpLogs.slice(startIndex, endIndex);
   
   // KPI Calculations
   const avgBg = pumpLogs.length ? pumpLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pumpLogs.length : 110;
@@ -245,10 +257,18 @@ export default function Dashboard() {
           <p className="text-sm text-gray-600 flex justify-between gap-4"><span>식사주입:</span> <span className="font-bold text-[#1cb085]">{log.bolus.toFixed(1)} U</span></p>
           <p className="text-sm text-gray-600 flex justify-between gap-4"><span>기초주입:</span> <span className="font-bold text-[#4a90e2]">{log.basal.toFixed(1)} U</span></p>
           <p className="text-sm text-gray-600 flex justify-between gap-4"><span>추가주입:</span> <span className="font-bold text-[#8b5cf6]">{log.append.toFixed(1)} U</span></p>
-          {(log.event_tags || log.error_count > 0) && (
-            <div className="mt-2 pt-2 border-t flex flex-wrap gap-1">
-              {log.event_tags?.split(',').map((t: string) => <span key={t} className="px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full">{t}</span>)}
-              {log.error_count > 0 && <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded-full">오류 {log.error_count}건</span>}
+          {(log.exercise_hours > 0 || log.reception_hours > 0 || log.notes || log.error_count > 0) && (
+            <div className="mt-2 pt-2 border-t flex flex-col gap-1">
+              <div className="flex flex-wrap gap-1">
+                {log.exercise_hours > 0 && <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full">운동 {log.exercise_hours}h</span>}
+                {log.reception_hours > 0 && <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs rounded-full">회식 {log.reception_hours}h</span>}
+                {log.error_count > 0 && <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded-full">{log.error_types || '오류'}</span>}
+              </div>
+              {log.notes && (
+                <div className="text-xs text-gray-500 bg-gray-50 p-1.5 rounded border border-gray-100 mt-1">
+                  "{log.notes}"
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -335,7 +355,7 @@ export default function Dashboard() {
                 <Activity className="w-5 h-5 text-[#1cb085]"/> 라이프로그 요약 (최근 7일)
               </h3>
               <div className="space-y-4">
-                {pumpLogs.slice(0, 7).map((log, i) => (
+                {latestLogs.slice(0, 7).map((log, i) => (
                   <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                     <div className="flex flex-col">
                       <span className="font-bold text-gray-700">{log.date}</span>
@@ -363,15 +383,36 @@ export default function Dashboard() {
           
           {/* Trend Chart Column */}
           <div className="lg:col-span-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-             <div className="flex justify-between items-start mb-6">
+             <div className="flex justify-between items-center mb-6">
                <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-1">인슐린 & 혈당 복합 트렌드</h3>
-                  <p className="text-sm text-gray-500">최근 30일간의 CGM 혈당과 인슐린 주입량 비교</p>
+                  <p className="text-sm text-gray-500">30일 단위 CGM 혈당과 인슐린 주입량 비교 (오른쪽이 최신)</p>
+               </div>
+               <div className="flex items-center gap-2">
+                 <button 
+                   onClick={() => setPageOffset(prev => Math.min(maxPage, prev + 1))}
+                   disabled={pageOffset >= maxPage}
+                   className={`p-2 rounded-lg border ${pageOffset >= maxPage ? 'text-gray-300 border-gray-200' : 'text-gray-600 border-gray-300 hover:bg-gray-100'} transition-colors`}
+                   title="이전 30일"
+                 >
+                   <ChevronLeft className="w-5 h-5"/>
+                 </button>
+                 <span className="text-sm font-bold text-gray-600 min-w-[60px] text-center">
+                   {pageOffset === 0 ? '최근 30일' : `과거 ${pageOffset*30}~${(pageOffset+1)*30}일`}
+                 </span>
+                 <button 
+                   onClick={() => setPageOffset(prev => Math.max(0, prev - 1))}
+                   disabled={pageOffset === 0}
+                   className={`p-2 rounded-lg border ${pageOffset === 0 ? 'text-gray-300 border-gray-200' : 'text-gray-600 border-gray-300 hover:bg-gray-100'} transition-colors`}
+                   title="다음 30일"
+                 >
+                   <ChevronRight className="w-5 h-5"/>
+                 </button>
                </div>
              </div>
              <div className="h-[400px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={[...pumpLogs].reverse().slice(-30)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorBasal" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor={ACCENT_COLOR} stopOpacity={0.3}/>
@@ -403,22 +444,31 @@ export default function Dashboard() {
         </div>
 
         {/* 2.5 Lifelog Events */}
-        {pumpLogs.filter(log => log.event_tags || log.exercise_hours > 0).length > 0 && (
+        {pumpLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).length > 0 && (
           <div className="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-hidden">
             <h3 className="text-lg font-bold text-[#17409c] mb-4 flex items-center gap-2">
               <Zap className="w-5 h-5"/> 최근 주요 라이프로그 이벤트
             </h3>
             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              {pumpLogs.filter(log => log.event_tags || log.exercise_hours > 0).slice(0, 10).map((log, idx) => (
+              {pumpLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).slice(-15).map((log, idx) => (
                 <div key={idx} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
                   <span className="text-xs font-bold text-gray-400">{log.date}</span>
-                  <div className="flex gap-2 flex-wrap mt-1">
+                  <div className="flex gap-2 flex-wrap mt-1 items-center">
                     {log.exercise_hours > 0 && (
-                      <span className="text-sm font-bold text-emerald-600 bg-emerald-100/80 px-2.5 py-1 rounded-lg">운동 {log.exercise_hours}h</span>
+                      <span className="text-sm font-bold text-emerald-600 bg-emerald-100/80 px-2.5 py-1 rounded-lg shadow-sm">운동 {log.exercise_hours}h</span>
                     )}
-                    {log.event_tags && log.event_tags.split(',').map((t: string, i: number) => (
-                      <span key={i} className="text-sm font-bold text-purple-600 bg-purple-100/80 px-2.5 py-1 rounded-lg">{t.trim()}</span>
-                    ))}
+                    {log.reception_hours > 0 && (
+                      <span className="text-sm font-bold text-orange-600 bg-orange-100/80 px-2.5 py-1 rounded-lg shadow-sm">회식 {log.reception_hours}h</span>
+                    )}
+                    {log.notes && (
+                      <div className="group relative flex items-center justify-center p-1 bg-white rounded-md shadow-sm border border-gray-200 cursor-help">
+                        <MessageSquare className="w-4 h-4 text-gray-500" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-xl">
+                          {log.notes}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

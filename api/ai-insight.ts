@@ -53,9 +53,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const reversedLogs = [...logs].reverse();
 
     const recent_logs_text = reversedLogs.map(log => {
-      let text = `- ${log.month}/${log.day}: 식사 주입(Bolus) ${log.eat_total}U, 수면 ${log.sleep_hours}h, 스트레스 ${log.stress_level}/10, 운동 ${log.exercise_hours}h, 평균혈당 ${log.avg_cgm}mg/dL`;
-      if (log.event_tags) {
-        text += `, 이벤트 [${log.event_tags}]`;
+      let text = `- ${log.month}/${log.day}: 식사 주입 ${log.eat_total}U, 수면 ${log.sleep_hours}h, 스트레스 ${log.stress_level}/10, 운동 ${log.exercise_hours}h, 회식 ${log.reception_hours}h, 평균혈당 ${log.avg_cgm}mg/dL`;
+      if (log.notes) {
+        text += `, 특이사항: [${log.notes}]`;
       }
       return text;
     }).join("\n");

@@ -68,7 +68,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       sleep_hours: log.sleep_hours,
       stress_level: log.stress_level,
       exercise_hours: log.exercise_hours,
+      reception_hours: log.reception_hours,
       event_tags: log.event_tags,
+      notes: log.notes,
       error_count: log.error_count,
       error_types: log.error_types
     }));
