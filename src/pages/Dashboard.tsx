@@ -89,6 +89,12 @@ export default function Dashboard() {
       setAiData(res.data);
     } catch (e) {
       console.error(e);
+      setAiData({
+        insight: "AI 서버와의 통신 지연으로 분석을 가져오지 못했습니다.",
+        reasoning: ["네트워크 오류", "잠시 후 다시 시도해 주세요."],
+        model: "Error",
+        prompt_used: ""
+      });
     }
   };
 
@@ -443,7 +449,7 @@ export default function Dashboard() {
                       <Activity className="w-3 h-3"/> Reasoning Process
                     </h4>
                     <ul className="space-y-3 font-mono text-sm text-blue-100/80">
-                      {aiData.reasoning.map((step, idx) => (
+                      {(aiData.reasoning || []).map((step: string, idx: number) => (
                         <li key={idx} className="flex gap-3 items-start">
                           <span className="text-blue-500 mt-0.5">[{idx+1}]</span>
                           <span className="leading-relaxed">{step}</span>

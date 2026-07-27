@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus } from 'lucide-react';
+import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap } from 'lucide-react';
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -228,13 +228,6 @@ export default function SampleDashboard() {
             </h2>
             <p className="text-gray-500 font-medium">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-[#17409c] text-white font-bold rounded-full hover:bg-blue-800 transition-colors shadow-lg flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5"/>
-            수동 기록
-          </button>
         </div>
 
         {/* 1. TOP ROW: 5 Gauge Charts */}
