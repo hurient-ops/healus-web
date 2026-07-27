@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import AIChatWidget from '../components/AIChatWidget';
 
-const api = axios.create({ baseURL: 'http://localhost:8000/api/web' });
+const api = axios.create({ baseURL: '/api' });
 
 // Add interceptor to attach JWT token if available
 api.interceptors.request.use((config) => {
@@ -383,6 +383,30 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* 2.5 Lifelog Events */}
+        {pumpLogs.filter(log => log.event_tags || log.exercise_hours > 0).length > 0 && (
+          <div className="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-hidden">
+            <h3 className="text-lg font-bold text-[#17409c] mb-4 flex items-center gap-2">
+              <Zap className="w-5 h-5"/> 최근 주요 라이프로그 이벤트
+            </h3>
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+              {pumpLogs.filter(log => log.event_tags || log.exercise_hours > 0).slice(0, 10).map((log, idx) => (
+                <div key={idx} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
+                  <span className="text-xs font-bold text-gray-400">{log.date}</span>
+                  <div className="flex gap-2 flex-wrap mt-1">
+                    {log.exercise_hours > 0 && (
+                      <span className="text-sm font-bold text-emerald-600 bg-emerald-100/80 px-2.5 py-1 rounded-lg">운동 {log.exercise_hours}h</span>
+                    )}
+                    {log.event_tags && log.event_tags.split(',').map((t: string, i: number) => (
+                      <span key={i} className="text-sm font-bold text-purple-600 bg-purple-100/80 px-2.5 py-1 rounded-lg">{t.trim()}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* 3. BOTTOM ROW: Transparent AI Box (Left) & Error Bar Chart (Right) */}
         <div className="grid lg:grid-cols-12 gap-8">
           {/* AI Box */}
@@ -498,13 +522,20 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
   
   const [loading, setLoading] = useState(false);
 
+  const [tab, setTab] = useState<'bg' | 'sleep' | 'stress'>('bg');
+  
+  const [datetime, setDatetime] = useState<string>(new Date().toISOString().slice(0, 16));
+  const [value, setValue] = useState<number>(100);
+  const [tag, setTag] = useState<string>('식후');
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await api.post('/bg-log', {
-        glucose_value: value,
-        tag: tag,
-        recorded_at: new Date(datetime).toISOString()
+      await api.post('/log-metrics', {
+        type: tab,
+        value: value,
+        tag: tab === 'bg' ? tag : undefined
       });
       onSuccess();
     } catch (e) {
@@ -518,55 +549,60 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
       <div className="bg-white/90 backdrop-blur-xl rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden relative border border-white/50">
-        <button onClick={onClose} className="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors bg-white/50 rounded-full p-1">
+        <button onClick={onClose} className="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors bg-white/50 rounded-full p-1 z-10">
           <X className="w-6 h-6" />
         </button>
         
-        <div className="p-10">
-          <h3 className="text-3xl font-bold font-serif text-[#17409c] mb-2">혈당 수동 입력</h3>
-          <p className="text-gray-500 mb-8">연속혈당측정기가 잠시 멈췄나요? 측정한 수치를 자유롭게 남겨주세요.</p>
+        <div className="p-8 md:p-10 max-h-[90vh] overflow-y-auto">
+          <h3 className="text-2xl md:text-3xl font-bold font-serif text-[#17409c] mb-6">라이프로그 기록</h3>
+          
+          <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl">
+            <button onClick={() => {setTab('bg'); setValue(100);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'bg' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>혈당</button>
+            <button onClick={() => {setTab('sleep'); setValue(7.5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'sleep' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>수면</button>
+            <button onClick={() => {setTab('stress'); setValue(5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'stress' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>스트레스</button>
+          </div>
           
           <div className="space-y-8">
-            <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
-              <label className="block text-sm font-bold text-[#17409c] mb-2">측정 일시 (연/월/일/시간)</label>
-              <input 
-                type="datetime-local" 
-                value={datetime}
-                onChange={e => setDatetime(e.target.value)}
-                className="w-full bg-transparent border-none text-lg font-medium text-gray-900 focus:ring-0 outline-none"
-              />
-            </div>
+            {tab === 'bg' && (
+              <>
+                <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                  <label className="block text-sm font-bold text-[#17409c] mb-2">측정 일시</label>
+                  <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)} className="w-full bg-transparent border-none text-base md:text-lg font-medium text-gray-900 focus:ring-0 outline-none"/>
+                </div>
+                <div className="flex flex-col items-center py-4">
+                  <span className="text-sm font-bold text-gray-500 mb-4">혈당 수치 (mg/dL)</span>
+                  <input type="number" value={value} onChange={e => setValue(Number(e.target.value))} className="text-6xl md:text-7xl font-bold text-center text-[#17409c] w-full outline-none border-b-2 border-transparent focus:border-[#17409c] bg-transparent py-2 transition-colors font-serif"/>
+                </div>
+                <div>
+                  <span className="block text-sm font-bold text-gray-500 mb-3 text-center">측정 상태 태그</span>
+                  <div className="flex gap-2 justify-center flex-wrap">
+                    {['기상직후', '공복', '식전', '식후', '취침전', '기타'].map(t => (
+                      <button key={t} onClick={() => setTag(t)} className={`px-4 md:px-5 py-2 md:py-2.5 rounded-full text-sm font-bold transition-all shadow-sm ${tag === t ? 'bg-[#17409c] text-white scale-105' : 'bg-white text-gray-500 border border-gray-200 hover:border-[#17409c]'}`}>{t}</button>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
 
-            <div className="flex flex-col items-center py-4">
-              <span className="text-sm font-bold text-gray-500 mb-4">혈당 수치 (mg/dL)</span>
-              <input 
-                type="number" 
-                value={value} 
-                onChange={e => setValue(Number(e.target.value))}
-                className="text-7xl font-bold text-center text-[#17409c] w-full outline-none border-b-2 border-transparent focus:border-[#17409c] bg-transparent py-2 transition-colors font-serif"
-              />
-            </div>
-
-            <div>
-              <span className="block text-sm font-bold text-gray-500 mb-3 text-center">측정 상태 태그</span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                {['기상직후', '공복', '식전', '식후', '취침전', '기타'].map(t => (
-                  <button 
-                    key={t}
-                    onClick={() => setTag(t)}
-                    className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm ${tag === t ? 'bg-[#17409c] text-white scale-105' : 'bg-white text-gray-500 border border-gray-200 hover:border-[#17409c] hover:text-[#17409c]'}`}
-                  >
-                    {t}
-                  </button>
-                ))}
+            {tab === 'sleep' && (
+              <div className="flex flex-col items-center py-10">
+                <span className="text-sm font-bold text-gray-500 mb-4">어젯밤 수면 시간 (시간)</span>
+                <div className="flex items-end gap-2">
+                  <input type="number" step="0.5" value={value} onChange={e => setValue(Number(e.target.value))} className="text-6xl md:text-7xl font-bold text-center text-[#17409c] w-32 md:w-40 outline-none border-b-2 border-transparent focus:border-[#17409c] bg-transparent py-2 transition-colors font-serif"/>
+                  <span className="text-xl md:text-2xl font-bold text-gray-400 mb-4">h</span>
+                </div>
               </div>
-            </div>
+            )}
 
-            <button 
-              onClick={handleSubmit} 
-              disabled={loading}
-              className="w-full py-5 rounded-2xl bg-[#17409c] text-white font-bold text-lg hover:bg-blue-800 transition-colors mt-4 disabled:opacity-50 shadow-lg"
-            >
+            {tab === 'stress' && (
+              <div className="flex flex-col items-center py-10">
+                <span className="text-sm font-bold text-gray-500 mb-4">오늘의 스트레스 지수 (1~10)</span>
+                <input type="range" min="1" max="10" value={value} onChange={e => setValue(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#17409c] mb-10"/>
+                <div className="text-6xl md:text-7xl font-bold text-center text-[#17409c] font-serif">{value}</div>
+              </div>
+            )}
+
+            <button onClick={handleSubmit} disabled={loading} className="w-full py-4 md:py-5 rounded-2xl bg-[#17409c] text-white font-bold text-lg hover:bg-blue-800 transition-colors mt-4 disabled:opacity-50 shadow-lg">
               {loading ? '저장 중...' : '이 기록 저장하기'}
             </button>
           </div>
