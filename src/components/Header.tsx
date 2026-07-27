@@ -53,7 +53,7 @@ export default function Header() {
           {isLoggedIn ? (
             <>
               <Link to="/dashboard" className="text-gray-700 font-medium hover:text-[#17409c] transition-colors flex items-center">
-                <span className="font-bold text-[#17409c] max-w-[80px] sm:max-w-[120px] md:max-w-[150px] truncate inline-block align-bottom">{user?.name || user?.email || '회원'}</span>님
+                <span className="font-bold text-[#17409c]">{user?.name || user?.email || '회원'}</span>님
               </Link>
               <button 
                 onClick={handleLogout} 
