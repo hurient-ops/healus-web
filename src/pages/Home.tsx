@@ -5,7 +5,7 @@ import Header from '../components/Header';
 
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2000&auto=format&fit=crop",
+    image: "/images/hero_home_1.jpg",
     title: "스마트 당뇨 관리 솔루션",
     heading: <>나만의 혈당 리듬,<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Healus</span>와 함께 완벽하게.</>,
     desc: "인슐린 펌프 데이터와 AI 통찰력이 만나, 당신의 하루를 더 안전하고 자유롭게 만듭니다. 지금 바로 과학적인 혈당 관리를 시작하세요."
@@ -58,7 +58,7 @@ export default function Home() {
             key={index} 
             className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
           >
-            <img src={slide.image} alt="배경 이미지" className="w-full h-full object-cover brightness-150 contrast-110" />
+            <img src={slide.image} alt="배경 이미지" className="w-full h-full object-cover contrast-125 saturate-110" />
             <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-black/40 to-transparent"></div>
           </div>
         ))}
