@@ -59,7 +59,7 @@ export default function Complications() {
                 당뇨병성 망막병증 (눈)
               </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                고혈당이 지속되면 망막의 미세 혈관이 막히거나 터져 시력이 저하되고 심하면 실명에 이를 수 있습니다. 초기에는 증상이 전혀 없기 때문에 자각 증상이 없더라도 <strong>최소 1년에 한 번 안저검사</strong>를 받아야 합니다.
+                고혈당이 지속되면 망막의 미세 혈관이 막히거나 터져 시력이 저하되고 심하면 실명에 이를 수 있습니다. 초기에는 증상이 전혀 없기 때문에 자각 증상이 없더라도 <strong>최소 <br className="hidden md:block" />1년에 한 번 안저검사</strong>를 받아야 합니다.
               </p>
             </div>
           </article>
@@ -75,7 +75,7 @@ export default function Complications() {
                 당뇨병성 신증 (콩팥)
               </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                신장의 여과 기능이 망가져 단백질이 소변으로 빠져나가고, 노폐물이 몸에 쌓이게 됩니다. 진행되면 투석이 필요할 수 있습니다. <strong>1년에 한 번 소변 미세알부민 검사와 혈액 검사(크레아티닌)</strong>가 필수입니다.
+                신장의 여과 기능이 망가져 단백질이 소변으로 빠져나가고, 노폐물이 몸에 쌓이게 <br className="hidden md:block" />됩니다. 진행되면 투석이 필요할 수 있습니다. <strong>1년에 한 번 소변 미세알부민 검사와 <br className="hidden md:block" />혈액 검사(크레아티닌)</strong>가 필수입니다.
               </p>
             </div>
           </article>
@@ -91,7 +91,7 @@ export default function Complications() {
                 당뇨병성 신경병증 (발/신경)
               </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                손발 끝이 저리거나 무감각해지며, 심하면 상처가 나도 통증을 느끼지 못해 조직이 괴사하는 '당뇨발'로 진행됩니다. 매일 샤워 후 발에 상처가 없는지 맨눈으로 직접 확인하고 보습제를 바르는 습관이 중요합니다.
+                손발 끝이 저리거나 무감각해지며, 심하면 상처가 나도 통증을 느끼지 못해 조직이 <br className="hidden md:block" />괴사하는 '당뇨발'로 진행됩니다. 매일 샤워 후 발에 상처가 없는지 맨눈으로 직접 <br className="hidden md:block" />확인하고 보습제를 바르는 습관이 중요합니다.
               </p>
             </div>
           </article>

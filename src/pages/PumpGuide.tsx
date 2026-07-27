@@ -68,8 +68,7 @@ export default function PumpGuide() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">식사 주입량 (Bolus)</h2>
               <p className="text-gray-600 leading-relaxed mb-6 flex-1">
                 식사를 하거나 간식을 먹을 때 들어온 탄수화물을 처리하기 위해 한 번에 주입하는 인슐린입니다.<br className="hidden md:block" />
-                먹을 음식의 탄수화물 양을 계산하고, 현재 혈당 수치를 고려하여 펌프의<br className="hidden md:block" />
-                '식사 주입 계산기'를 활용하면 훨씬 정밀한 투여가 가능합니다.
+                먹을 음식의 탄수화물 양을 계산하고, 현재 혈당 수치를 고려하여 펌프의 '식사 주입 계산기'를 활용하면<br className="hidden md:block" /> 훨씬 정밀한 투여가 가능합니다.
               </p>
             </div>
           </article>
@@ -107,7 +106,7 @@ export default function PumpGuide() {
                 <div>
                   <h4 className="text-lg font-bold text-red-900 mb-2">배터리 부족 알람</h4>
                   <p className="text-gray-700 leading-relaxed">
-                    단순한 알람이지만, 무시하고 자다가 펌프가 꺼지면 밤새 인슐린이 주입되지 않아 아침에 고혈당 쇼크가 올 수 있습니다. 알람이 울리면 즉시 충전하거나 건전지를 교체하세요.
+                    단순한 알람이지만, 무시하고 자다가 펌프가 꺼지면 밤새 인슐린이 주입되지 않아 아침에 고혈당 쇼크가 올 수<br className="hidden md:block" /> 있습니다. 알람이 울리면 즉시 충전하거나 건전지를 교체하세요.
                   </p>
                 </div>
               </div>

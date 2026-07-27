@@ -55,7 +55,7 @@ export default function Diabetes() {
               </p>
               <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
                 <h4 className="font-bold text-[#17409c] mb-2 flex items-center gap-2"><Info className="w-5 h-5"/> 핵심 관리법</h4>
-                <p className="text-gray-700 text-sm leading-relaxed">평생 외부에서 인슐린을 공급받아야 하므로, 인슐린 <br className="hidden md:block" />주사나 인슐린 펌프 사용이 필수적입니다. <br className="hidden md:block" />탄수화물 계량과 인슐린 용량 조절 교육이 매우 중요합니다.</p>
+                <p className="text-gray-700 text-sm leading-relaxed">평생 외부에서 인슐린을 공급받아야 하므로, 인슐린 <br className="hidden md:block" />주사나 인슐린 펌프 사용이 필수적입니다. 탄수화물<br className="hidden md:block" /> 계량과 인슐린 용량 조절 교육이 매우 중요합니다.</p>
               </div>
             </div>
             <div className="relative h-64 md:h-auto">
