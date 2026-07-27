@@ -653,6 +653,7 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
             <button onClick={() => {setTab('bg'); setValue(100);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'bg' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>혈당</button>
             <button onClick={() => {setTab('sleep'); setValue(7.5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'sleep' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>수면</button>
             <button onClick={() => {setTab('stress'); setValue(5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'stress' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>스트레스</button>
+            <button onClick={() => {setTab('notes'); setNoteText('');}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'notes' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>특이사항</button>
           </div>
           
           <div className="space-y-8">
@@ -689,8 +690,16 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
 
             {tab === 'stress' && (
               <div className="flex flex-col items-center py-10">
-                <span className="text-sm font-bold text-gray-500 mb-4">오늘의 스트레스 지수 (1~10)</span>
-                <input type="range" min="1" max="10" value={value} onChange={e => setValue(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#17409c] mb-10"/>
+                <span className="text-sm font-bold text-gray-500 mb-2">오늘의 스트레스 지수 (1~10)</span>
+                <p className="text-xs text-gray-400 mb-8 text-center px-4">
+                  1(가장 평온함)부터 10(극심한 스트레스) 사이에서<br/>오늘 하루 전반적으로 느낀 강도를 선택해주세요.
+                </p>
+                <input type="range" min="1" max="10" value={value} onChange={e => setValue(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#17409c] mb-2"/>
+                <div className="flex justify-between w-full px-2 text-xs font-bold text-gray-400 mb-8">
+                  <span>1 (평온)</span>
+                  <span>5 (보통)</span>
+                  <span>10 (극심)</span>
+                </div>
                 <div className="text-6xl md:text-7xl font-bold text-center text-[#17409c] font-serif">{value}</div>
               </div>
             )}
