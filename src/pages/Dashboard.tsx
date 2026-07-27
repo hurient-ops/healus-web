@@ -22,6 +22,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Add interceptor to handle 401 Unauthorized
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.setItem('isLoggedIn', 'false');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 interface BgLog {
   value: number;
   tag: string;
