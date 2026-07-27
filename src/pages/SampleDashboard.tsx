@@ -384,8 +384,8 @@ export default function SampleDashboard() {
               <Zap className="w-5 h-5"/> 최근 주요 라이프로그 이벤트
             </h3>
             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide" ref={eventsScrollRef}>
-              {pastLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).slice(-15).map((log, index) => (
-                <div key={index} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
+              {pastLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).slice(-15).map((log, idx) => (
+                <div key={`past-${idx}`} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
                   <span className="text-xs font-bold text-gray-400">{log.date}</span>
                   <div className="flex gap-2 flex-wrap mt-1 items-center">
                     {log.exercise_hours > 0 && (
@@ -406,7 +406,26 @@ export default function SampleDashboard() {
                   </div>
                 </div>
               ))}
-            </div>
+            {(todayLog ? [todayLog] : []).filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).map((log, idx) => (
+                <div key={`today-${idx}`} className="flex-shrink-0 bg-blue-100 px-5 py-3 rounded-2xl border border-blue-200 flex flex-col gap-1 min-w-[150px]">
+                  <span className="text-xs font-bold text-blue-800">오늘 ({log.date})</span>
+                  <div className="flex gap-2 flex-wrap mt-1 items-center">
+                    {log.exercise_hours > 0 && <span className="text-sm font-bold text-emerald-700">운동 {log.exercise_hours}h</span>}
+                    {log.reception_hours > 0 && <span className="text-sm font-bold text-orange-700">회식 {log.reception_hours}h</span>}
+                  
+                    {log.notes && (
+                      <div className="group relative flex items-center justify-center p-1 bg-white/50 rounded-md shadow-sm border border-blue-200 cursor-help">
+                        <MessageSquare className="w-4 h-4 text-blue-600" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-xl">
+                          {log.notes}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              </div>
           </div>
         )}
 
