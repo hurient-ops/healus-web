@@ -5,19 +5,19 @@ import Header from '../components/Header';
 
 const slides = [
   {
-    image: "/images/hero_home_1.jpg",
+    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2000&auto=format&fit=crop",
     title: "스마트 당뇨 관리 솔루션",
     heading: <>나만의 혈당 리듬,<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Healus</span>와 함께 완벽하게.</>,
     desc: "인슐린 펌프 데이터와 AI 통찰력이 만나, 당신의 하루를 더 안전하고 자유롭게 만듭니다. 지금 바로 과학적인 혈당 관리를 시작하세요."
   },
   {
-    image: "/images/hero_home_2.jpg",
-    title: "100% 실데이터 분석",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop",
+    title: "100% 데이터 분석",
     heading: <>모든 라이프로그를,<br/>하나의 <span className="text-blue-400">대시보드</span>에서.</>,
     desc: "혈당 수치(CGM), 식사량, 수면 시간, 스트레스, 운동 기록까지. 흩어져 있던 당신의 모든 생체 데이터를 Healus가 하나로 모아 분석합니다."
   },
   {
-    image: "/images/hero_home_3.jpg",
+    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2000&auto=format&fit=crop",
     title: "초개인화 AI 주치의",
     heading: <>분석 과정을 <span className="text-emerald-400">투명하게</span>,<br/>결과는 더 정확하게.</>,
     desc: "주말 회식 패턴, 수면 부족에 따른 인슐린 저항성 증가 등 숨겨진 원인을 인공지능이 찾아내고, 추론 과정을 투명하게 시각화하여 제공합니다."
@@ -59,7 +59,8 @@ export default function Home() {
             className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
           >
             <img src={slide.image} alt="배경 이미지" className="w-full h-full object-cover" />
-            <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-black/70 via-black/30 to-transparent"></div>
+            <div className="absolute inset-0 bg-black/40 mix-blend-multiply"></div>
+            <div className="absolute inset-y-0 left-0 w-full md:w-3/4 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
           </div>
         ))}
         

@@ -29,7 +29,7 @@ export default function PumpGuide() {
           </div>
           <h1 className="text-5xl font-bold text-white mb-6 tracking-tight font-serif">스마트한 인슐린 펌프 사용법</h1>
           <p className="text-xl text-gray-300 font-light leading-relaxed">
-            인공 췌장을 향한 첫걸음. 기초 주입과 식사 주입의 차이를 이해하고, 발생 가능한 기기 알람에 당황하지 않고 대처하는 방법을 익혀보세요.
+            인공 췌장을 향한 첫걸음. 기초 주입과 식사 주입의 차이를 이해하고, 발생 가능한 기기 알람에<br className="hidden md:block" />당황하지 않고 대처하는 방법을 익혀보세요.
           </p>
         </div>
       </section>
@@ -67,8 +67,9 @@ export default function PumpGuide() {
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">식사 주입량 (Bolus)</h2>
               <p className="text-gray-600 leading-relaxed mb-6 flex-1">
-                식사를 하거나 간식을 먹을 때 들어온 탄수화물을 처리하기 위해 한 번에 주입하는 인슐린입니다. 
-                먹을 음식의 탄수화물 양을 계산하고, 현재 혈당 수치를 고려하여 펌프의 '식사 주입 계산기'를 활용하면 훨씬 정밀한 투여가 가능합니다.
+                식사를 하거나 간식을 먹을 때 들어온 탄수화물을 처리하기 위해 한 번에 주입하는 인슐린입니다.<br className="hidden md:block" />
+                먹을 음식의 탄수화물 양을 계산하고, 현재 혈당 수치를 고려하여 펌프의<br className="hidden md:block" />
+                '식사 주입 계산기'를 활용하면 훨씬 정밀한 투여가 가능합니다.
               </p>
             </div>
           </article>
@@ -93,7 +94,7 @@ export default function PumpGuide() {
                 <div>
                   <h4 className="text-lg font-bold text-red-900 mb-2">막힘(Occlusion) 알람</h4>
                   <p className="text-gray-700 leading-relaxed">
-                    주사 바늘(캐뉼라)이 꺾이거나 혈액/조직액 등으로 막혀 인슐린이 제대로 들어가지 못할 때 발생합니다. 즉시 새로운 주사 부위로 교체해야 합니다. 
+                    주사 바늘(캐뉼라)이 꺾이거나 혈액/조직액 등으로 막혀 인슐린이 제대로 들어가지 못할 때 발생합니다.<br className="hidden md:block" />즉시 새로운 주사 부위로 교체해야 합니다. 
                     방치 시 급성 케톤산혈증으로 이어질 수 있어 가장 주의해야 합니다.
                   </p>
                 </div>

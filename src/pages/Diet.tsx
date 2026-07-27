@@ -29,7 +29,7 @@ export default function Diet() {
           </div>
           <h1 className="text-5xl font-bold text-white mb-6 tracking-tight font-serif">올바른 식단 관리</h1>
           <p className="text-xl text-gray-300 font-light leading-relaxed">
-            먹는 즐거움을 포기할 필요는 없습니다. 혈당 스파이크를 막는 거꾸로 식사법과 탄수화물 계량법을 통해 맛있고 건강한 하루를 설계하세요.
+            먹는 즐거움을 포기할 필요는 없습니다. 혈당 스파이크를 막는 거꾸로 식사법과 탄수화물 계량법을<br className="hidden md:block" />통해 맛있고 건강한 하루를 설계하세요.
           </p>
         </div>
       </section>
