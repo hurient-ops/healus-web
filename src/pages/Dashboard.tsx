@@ -512,19 +512,13 @@ export default function Dashboard() {
 
 // ... BgLogModal remains the same
 function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: () => void }) {
-  const [value, setValue] = useState(100);
-  const [tag, setTag] = useState('식전');
+  const [tab, setTab] = useState<'bg' | 'sleep' | 'stress'>('bg');
   
   const now = new Date();
   const tzOffset = now.getTimezoneOffset() * 60000;
   const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 16);
-  const [datetime, setDatetime] = useState(localISOTime);
+  const [datetime, setDatetime] = useState<string>(localISOTime);
   
-  const [loading, setLoading] = useState(false);
-
-  const [tab, setTab] = useState<'bg' | 'sleep' | 'stress'>('bg');
-  
-  const [datetime, setDatetime] = useState<string>(new Date().toISOString().slice(0, 16));
   const [value, setValue] = useState<number>(100);
   const [tag, setTag] = useState<string>('식후');
   const [loading, setLoading] = useState(false);
