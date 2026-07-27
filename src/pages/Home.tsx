@@ -141,8 +141,8 @@ export default function Home() {
             </div>
             <h2 className="text-4xl font-bold text-gray-900 mb-6 tracking-tight font-serif">흩어진 나의 건강 기록,<br />단 하나의 플랫폼으로</h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              연속혈당측정기(CGM)의 실시간 혈당 수치와 인슐린 펌프의 주입량은 물론, 수면, 스트레스, 식단 기록까지. 
-              <strong>모든 라이프로그를 Healus 한 곳에 모아</strong> 직관적인 차트와 트렌드로 한눈에 파악하세요. 복잡한 연동 과정 없이 내 몸의 변화를 가장 정확하게 추적할 수 있습니다.
+              연속혈당측정기(CGM)의 실시간 혈당 수치와 인슐린 펌프의 주입량은 물론, 수면, 스트레스, 식단 기록까지  
+              <strong>모든 라이프로그를 Healus 한 곳에 모아</strong> <br className="hidden lg:block" />직관적인 차트와 트렌드로 한눈에 파악하세요. 복잡한 연동 과정 없이 <br className="hidden lg:block" />내 몸의 변화를 가장 정확하게 추적할 수 있습니다.
             </p>
           </div>
           <div className="w-full md:w-1/2">
