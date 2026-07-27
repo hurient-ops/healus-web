@@ -120,8 +120,8 @@ export default function Home() {
               <Brain className="w-8 h-8 text-[#17409c]" />
             </div>
             <h2 className="text-4xl font-bold text-gray-900 mb-6 tracking-tight font-serif">24시간 나와 함께하는<br />초개인화 AI 주치의</h2>
-            <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              단순히 수치만 보여주지 않습니다. Healus의 인공지능은 100일간의 식사, 수면, 운동 데이터를 입체적으로 분석하여 주말의 과식 패턴이나 운동 부족 여부를 스스로 찾아냅니다. 
+            <p className="text-lg text-gray-600 leading-relaxed mb-8 break-keep">
+              단순히 수치만 보여주지 않습니다. Healus의 인공지능은 100일간의 식사, 수면, 운동 데이터를 입체적으로 분석하여 주말의 과식 패턴이나 운동 부족<br className="hidden lg:block" />여부를 스스로 찾아냅니다. 
               그리고 <strong>'어떻게 이런 결론이 나왔는지'</strong> 추론 과정을 명확히 보여주어 100% 신뢰할 수 있습니다.
             </p>
             <Link to="/sample-dashboard" className="text-[#17409c] font-bold flex items-center gap-1 hover:gap-2 transition-all text-lg">
