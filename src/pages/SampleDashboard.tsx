@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
@@ -88,6 +88,9 @@ export default function SampleDashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [aiData, setAiData] = useState<AiResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [pageOffset, setPageOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -107,6 +110,14 @@ export default function SampleDashboard() {
   }, []);
 
   const pumpLogs = data?.pump_logs || [];
+
+  const eventsScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (eventsScrollRef.current) {
+      eventsScrollRef.current.scrollLeft = eventsScrollRef.current.scrollWidth;
+    }
+  }, [pumpLogs]);
   
   // 로컬 브라우저 시간 기준 오늘 날짜 구하기 ('M/D' 포맷)
   const now = new Date();
@@ -126,7 +137,7 @@ export default function SampleDashboard() {
   const chartData = pastLogs.slice(startIndex, endIndex);
   
   // KPI Calculations
-  const avgBg = pastLogs.length ? pastLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pastLogs.length : 110;
+  const avgBg = pastLogs.length ? pastLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pastLogs.length : 0;
   const targetBgPercent = pastLogs.length ? (pastLogs.filter(log => log.avg_cgm >= 70 && log.avg_cgm <= 180).length / pastLogs.length) * 100 : 0;
   const avgBasal = todayLog ? todayLog.basal : 0;
   const avgBolus = todayLog ? todayLog.bolus : 0;
@@ -372,7 +383,7 @@ export default function SampleDashboard() {
             <h3 className="text-lg font-bold text-[#17409c] mb-4 flex items-center gap-2">
               <Zap className="w-5 h-5"/> 최근 주요 라이프로그 이벤트
             </h3>
-            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide" ref={eventsScrollRef}>
               {pastLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).slice(-15).map((log, index) => (
                 <div key={index} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
                   <span className="text-xs font-bold text-gray-400">{log.date}</span>

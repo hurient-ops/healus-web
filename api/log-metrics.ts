@@ -45,7 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       if (error) throw error;
 
-    } else if (type === 'sleep' || type === 'stress') {
+    } else if (type === 'sleep' || type === 'stress' || type === 'notes') {
       // 가장 최근 pump_logs를 찾아서 업데이트 (오늘 날짜의 로그)
       const { data: latestLogs, error: fetchError } = await supabase
         .from('pump_logs')
@@ -60,6 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const updateData: any = {};
         if (type === 'sleep') updateData.sleep_hours = value;
         if (type === 'stress') updateData.stress_level = value;
+        if (type === 'notes') updateData.notes = value;
 
         const { error: updateError } = await supabase
           .from('pump_logs')

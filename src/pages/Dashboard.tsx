@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toPng } from 'html-to-image';
@@ -115,6 +115,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchDashboard();
     fetchAiInsight();
   }, []);
@@ -175,6 +176,14 @@ export default function Dashboard() {
   };
 
   const pumpLogs = data?.pump_logs || [];
+
+  const eventsScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (eventsScrollRef.current) {
+      eventsScrollRef.current.scrollLeft = eventsScrollRef.current.scrollWidth;
+    }
+  }, [pumpLogs]);
   
   // 로컬 브라우저 시간 기준 오늘 날짜 구하기 ('M/D' 포맷)
   const now = new Date();
@@ -195,7 +204,7 @@ export default function Dashboard() {
   
   // KPI Calculations
   // 평균 혈당, 목표 달성률은 완료된 하루인 '과거 데이터(어제까지)' 기준
-  const avgBg = pastLogs.length ? pastLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pastLogs.length : 110;
+  const avgBg = pastLogs.length ? pastLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pastLogs.length : 0;
   const targetBgPercent = pastLogs.length ? (pastLogs.filter(log => log.avg_cgm >= 70 && log.avg_cgm <= 180).length / pastLogs.length) * 100 : 0;
   
   // 금일 주입량은 명확히 '오늘' 데이터 기준
@@ -460,7 +469,7 @@ export default function Dashboard() {
             <h3 className="text-lg font-bold text-[#17409c] mb-4 flex items-center gap-2">
               <Zap className="w-5 h-5"/> 최근 주요 라이프로그 이벤트
             </h3>
-            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide" ref={eventsScrollRef}>
               {(todayLog ? [todayLog] : []).filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).map((log, idx) => (
                 <div key={`today-${idx}`} className="flex-shrink-0 bg-blue-100 px-5 py-3 rounded-2xl border border-blue-200 flex flex-col gap-1 min-w-[150px]">
                   <span className="text-xs font-bold text-blue-800">오늘 ({log.date})</span>
@@ -601,7 +610,7 @@ export default function Dashboard() {
 
 // ... BgLogModal remains the same
 function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: () => void }) {
-  const [tab, setTab] = useState<'bg' | 'sleep' | 'stress'>('bg');
+  const [tab, setTab] = useState<'bg' | 'sleep' | 'stress' | 'notes'>('bg');
   
   const now = new Date();
   const tzOffset = now.getTimezoneOffset() * 60000;
@@ -610,6 +619,7 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
   
   const [value, setValue] = useState<number>(100);
   const [tag, setTag] = useState<string>('식후');
+  const [noteText, setNoteText] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -617,7 +627,7 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
     try {
       await api.post('/log-metrics', {
         type: tab,
-        value: value,
+        value: tab === 'notes' ? noteText : value,
         tag: tab === 'bg' ? tag : undefined
       });
       onSuccess();
@@ -685,6 +695,13 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
               </div>
             )}
 
+            
+            {tab === 'notes' && (
+              <div className="flex flex-col items-center py-4">
+                <span className="text-sm font-bold text-gray-500 mb-4">특이사항 메모</span>
+                <textarea value={noteText} onChange={e => setNoteText(e.target.value)} placeholder="회식, 과식, 운동 등 특이사항을 자유롭게 기록해보세요." className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-base md:text-lg font-medium text-gray-900 focus:ring-2 focus:ring-[#17409c] outline-none min-h-[150px] resize-none"></textarea>
+              </div>
+            )}
             <button onClick={handleSubmit} disabled={loading} className="w-full py-4 md:py-5 rounded-2xl bg-[#17409c] text-white font-bold text-lg hover:bg-blue-800 transition-colors mt-4 disabled:opacity-50 shadow-lg">
               {loading ? '저장 중...' : '이 기록 저장하기'}
             </button>
