@@ -68,7 +68,7 @@ export default function PumpGuide() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">식사 주입량 (Bolus)</h2>
               <p className="text-gray-600 leading-relaxed mb-6 flex-1">
                 식사를 하거나 간식을 먹을 때 들어온 탄수화물을 처리하기 위해 한 번에 주입하는 인슐린입니다.<br className="hidden md:block" />
-                먹을 음식의 탄수화물 양을 계산하고, 현재 혈당 수치를 고려하여 펌프의 '식사 주입 계산기'를 활용하면<br className="hidden md:block" /> 훨씬 정밀한 투여가 가능합니다.
+                먹을 음식의 탄수화물 양을 계산하고, 현재 혈당 수치를<br className="hidden md:block" /> 고려하여 펌프의 '식사 주입 계산기'를 활용하면 훨씬 정밀한<br className="hidden md:block" /> 투여가 가능합니다.
               </p>
             </div>
           </article>
