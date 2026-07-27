@@ -60,10 +60,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const reversedPumpLogs = pumpLogs ? [...pumpLogs].reverse() : [];
     
     const processed_pump_logs = reversedPumpLogs.map(log => ({
-      date: `${log.month}/${log.day}`,
-      basal: log.base_total,
-      bolus: log.eat_total,
-      append: log.append_total,
+      date: log.date,
+      basal: log.basal,
+      bolus: log.bolus,
+      append: log.append,
       avg_cgm: log.avg_cgm,
       sleep_hours: log.sleep_hours,
       stress_level: log.stress_level,
