@@ -107,29 +107,36 @@ export default function SampleDashboard() {
   }, []);
 
   const pumpLogs = data?.pump_logs || [];
-  const latestLogs = [...pumpLogs].reverse(); // 최신(어제)이 0번 인덱스
+  
+  // KST 기준 오늘 날짜 구하기
+  const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  
+  // 오늘 데이터와 과거(어제 이전) 데이터 분리
+  const todayLog = pumpLogs.find(log => log.date === todayStr) || null;
+  const pastLogs = pumpLogs.filter(log => log.date !== todayStr);
+  
+  const latestLogs = [...pastLogs].reverse(); // 과거 데이터 중 최신(어제)이 0번 인덱스
   
   // 페이징 계산 (차트용)
-  // pumpLogs는 [과거...최신] 배열
-  const totalDays = pumpLogs.length;
+  const totalDays = pastLogs.length;
   const maxPage = Math.max(0, Math.ceil(totalDays / 30) - 1);
   const startIndex = Math.max(0, totalDays - 30 * (pageOffset + 1));
   const endIndex = totalDays - 30 * pageOffset;
-  const chartData = pumpLogs.slice(startIndex, endIndex);
+  const chartData = pastLogs.slice(startIndex, endIndex);
   
   // KPI Calculations
-  const avgBg = pumpLogs.length ? pumpLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pumpLogs.length : 110;
-  const targetBgPercent = pumpLogs.length ? (pumpLogs.filter(log => log.avg_cgm >= 70 && log.avg_cgm <= 180).length / pumpLogs.length) * 100 : 0;
-  const latestDay = pumpLogs.length > 0 ? pumpLogs[pumpLogs.length - 1] : null;\n  const avgBasal = latestDay ? latestDay.basal : 0;
-  const avgBolus = latestDay ? latestDay.bolus : 0;
-  const avgAppend = latestDay ? latestDay.append : 0;
+  const avgBg = pastLogs.length ? pastLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pastLogs.length : 110;
+  const targetBgPercent = pastLogs.length ? (pastLogs.filter(log => log.avg_cgm >= 70 && log.avg_cgm <= 180).length / pastLogs.length) * 100 : 0;
+  const avgBasal = todayLog ? todayLog.basal : 0;
+  const avgBolus = todayLog ? todayLog.bolus : 0;
+  const avgAppend = todayLog ? todayLog.append : 0;
 
   // Recent Error processing for bottom right chart
   const ERROR_TYPES = ['주사기 막힘', '주입불가', '배터리 부족', '일시정지', '시간제한', '1 일 초과량 주입', '단위초과', '원인불명'];
   const errorMap: Record<string, number> = {};
   ERROR_TYPES.forEach(type => errorMap[type] = 0);
   
-  pumpLogs.forEach(log => {
+  pastLogs.forEach(log => {
     if (log.error_types) {
       log.error_types.split(',').forEach(err => {
         const trimmed = err.trim();
@@ -360,13 +367,13 @@ export default function SampleDashboard() {
 
         {/* 2.5 Lifelog Events */}
         {data && data.pump_logs.filter(log => log.event_tags || log.exercise_hours > 0).length > 0 && (
-          <div className="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-hidden">
+        <div className="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-hidden">
             <h3 className="text-lg font-bold text-[#17409c] mb-4 flex items-center gap-2">
               <Zap className="w-5 h-5"/> 최근 주요 라이프로그 이벤트
             </h3>
             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              {data.pump_logs.filter(log => log.event_tags || log.exercise_hours > 0).slice(0, 10).map((log, idx) => (
-                <div key={idx} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
+              {pastLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).slice(-15).map((log, index) => (
+                <div key={index} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
                   <span className="text-xs font-bold text-gray-400">{log.date}</span>
                   <div className="flex gap-2 flex-wrap mt-1 items-center">
                     {log.exercise_hours > 0 && (

@@ -106,8 +106,8 @@ export default function Dashboard() {
     } catch (e) {
       console.error(e);
       setAiData({
-        insight: "AI 서버와의 통신 지연으로 분석을 가져오지 못했습니다.",
-        reasoning: ["네트워크 오류", "잠시 후 다시 시도해 주세요."],
+        insight: "AI ?�버?�???�신 지?�으�?분석??가?�오지 못했?�니??",
+        reasoning: ["?�트?�크 ?�류", "?�시 ???�시 ?�도??주세??"],
         model: "Error",
         prompt_used: ""
       });
@@ -124,7 +124,7 @@ export default function Dashboard() {
     const element = document.getElementById('dashboard-content');
     if (!element) {
       console.error("No element found!");
-      alert("대시보드 영역을 찾을 수 없습니다.");
+      alert("?�?�보???�역??찾을 ???�습?�다.");
       return;
     }
     try {
@@ -140,7 +140,7 @@ export default function Dashboard() {
       console.log("Download triggered.");
     } catch (e) {
       console.error("Capture failed:", e);
-      alert("캡쳐 중 오류가 발생했습니다.");
+      alert("캡쳐 �??�류가 발생?�습?�다.");
     }
   };
 
@@ -149,7 +149,7 @@ export default function Dashboard() {
     const element = document.getElementById('dashboard-content');
     if (!element) {
       console.error("No element found!");
-      alert("대시보드 영역을 찾을 수 없습니다.");
+      alert("?�?�보???�역??찾을 ???�습?�다.");
       return;
     }
     try {
@@ -170,44 +170,34 @@ export default function Dashboard() {
       console.log("PDF download triggered.");
     } catch (e) {
       console.error("PDF generation failed:", e);
-      alert("PDF 생성 중 오류가 발생했습니다.");
+      alert("PDF ?�성 �??�류가 발생?�습?�다.");
     }
   };
 
   const pumpLogs = data?.pump_logs || [];
+  const latestLogs = [...pumpLogs].reverse(); // 최신(?�제)??0�??�덱??
   
-  // KST 기준 오늘 날짜 구하기 (안전하게 로컬 시간대로 가져오기)
-  const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  
-  // 오늘 데이터와 과거(어제 이전) 데이터 분리
-  const todayLog = pumpLogs.find(log => log.date === todayStr) || null;
-  const pastLogs = pumpLogs.filter(log => log.date !== todayStr);
-  
-  const latestLogs = [...pastLogs].reverse(); // 과거 데이터 중 최신(어제)이 0번 인덱스
-  
-  // 페이징 계산 (차트용) - 과거 데이터 기준
-  const totalDays = pastLogs.length;
+  // ?�이�?계산 (차트??
+  // pumpLogs??[과거...최신] 배열
+  const totalDays = pumpLogs.length;
   const maxPage = Math.max(0, Math.ceil(totalDays / 30) - 1);
   const startIndex = Math.max(0, totalDays - 30 * (pageOffset + 1));
   const endIndex = totalDays - 30 * pageOffset;
-  const chartData = pastLogs.slice(startIndex, endIndex);
+  const chartData = pumpLogs.slice(startIndex, endIndex);
   
   // KPI Calculations
-  // 평균 혈당, 목표 달성률은 완료된 하루인 '과거 데이터(어제까지)' 기준
-  const avgBg = pastLogs.length ? pastLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pastLogs.length : 110;
-  const targetBgPercent = pastLogs.length ? (pastLogs.filter(log => log.avg_cgm >= 70 && log.avg_cgm <= 180).length / pastLogs.length) * 100 : 0;
-  
-  // 금일 주입량은 명확히 '오늘' 데이터 기준
-  const avgBasal = todayLog ? todayLog.basal : 0;
-  const avgBolus = todayLog ? todayLog.bolus : 0;
-  const avgAppend = todayLog ? todayLog.append : 0;
+  const avgBg = pumpLogs.length ? pumpLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pumpLogs.length : 110;
+  const targetBgPercent = pumpLogs.length ? (pumpLogs.filter(log => log.avg_cgm >= 70 && log.avg_cgm <= 180).length / pumpLogs.length) * 100 : 0;
+  const latestDay = pumpLogs.length > 0 ? pumpLogs[pumpLogs.length - 1] : null;\n  const avgBasal = latestDay ? latestDay.basal : 0;
+  const avgBolus = latestDay ? latestDay.bolus : 0;
+  const avgAppend = latestDay ? latestDay.append : 0;
 
   // Recent Error processing for bottom right chart
-  const ERROR_TYPES = ['주사기 막힘', '주입불가', '배터리 부족', '일시정지', '시간제한', '1 일 초과량 주입', '단위초과', '원인불명'];
+  const ERROR_TYPES = ['주사�?막힘', '주입불�?', '배터�?부�?, '?�시?��?', '?�간?�한', '1 ??초과??주입', '?�위초과', '?�인불명'];
   const errorMap: Record<string, number> = {};
   ERROR_TYPES.forEach(type => errorMap[type] = 0);
   
-  pastLogs.forEach(log => {
+  pumpLogs.forEach(log => {
     if (log.error_types) {
       log.error_types.split(',').forEach(err => {
         const trimmed = err.trim();
@@ -263,16 +253,16 @@ export default function Dashboard() {
       return (
         <div className="bg-white/95 backdrop-blur-md p-4 border border-gray-200 shadow-xl rounded-xl">
           <p className="font-bold text-gray-800 mb-2 border-b pb-2">{label}</p>
-          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>혈당(CGM):</span> <span className="font-bold">{log.avg_cgm.toFixed(1)} mg/dL</span></p>
-          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>식사주입:</span> <span className="font-bold text-[#1cb085]">{log.bolus.toFixed(1)} U</span></p>
+          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>?�당(CGM):</span> <span className="font-bold">{log.avg_cgm.toFixed(1)} mg/dL</span></p>
+          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>?�사주입:</span> <span className="font-bold text-[#1cb085]">{log.bolus.toFixed(1)} U</span></p>
           <p className="text-sm text-gray-600 flex justify-between gap-4"><span>기초주입:</span> <span className="font-bold text-[#4a90e2]">{log.basal.toFixed(1)} U</span></p>
-          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>추가주입:</span> <span className="font-bold text-[#8b5cf6]">{log.append.toFixed(1)} U</span></p>
+          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>추�?주입:</span> <span className="font-bold text-[#8b5cf6]">{log.append.toFixed(1)} U</span></p>
           {(log.exercise_hours > 0 || log.reception_hours > 0 || log.notes || log.error_count > 0) && (
             <div className="mt-2 pt-2 border-t flex flex-col gap-1">
               <div className="flex flex-wrap gap-1">
-                {log.exercise_hours > 0 && <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full">운동 {log.exercise_hours}h</span>}
-                {log.reception_hours > 0 && <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs rounded-full">회식 {log.reception_hours}h</span>}
-                {log.error_count > 0 && <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded-full">{log.error_types || '오류'}</span>}
+                {log.exercise_hours > 0 && <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full">?�동 {log.exercise_hours}h</span>}
+                {log.reception_hours > 0 && <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs rounded-full">?�식 {log.reception_hours}h</span>}
+                {log.error_count > 0 && <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded-full">{log.error_types || '?�류'}</span>}
               </div>
               {log.notes && (
                 <div className="text-xs text-gray-500 bg-gray-50 p-1.5 rounded border border-gray-100 mt-1">
@@ -302,10 +292,10 @@ export default function Dashboard() {
           </Link>
           
           <nav className="hidden md:flex items-center gap-8 font-normal text-gray-600">
-            <Link to="/diabetes" className="hover:text-[#17409c] transition-colors">당뇨병의 이해</Link>
-            <Link to="/diet" className="hover:text-[#1cb085] transition-colors">식단 관리</Link>
-            <Link to="/pump-guide" className="hover:text-orange-600 transition-colors">펌프 가이드</Link>
-            <Link to="/complications" className="hover:text-red-600 transition-colors">합병증 예방</Link>
+            <Link to="/diabetes" className="hover:text-[#17409c] transition-colors">?�뇨병의 ?�해</Link>
+            <Link to="/diet" className="hover:text-[#1cb085] transition-colors">?�단 관�?/Link>
+            <Link to="/pump-guide" className="hover:text-orange-600 transition-colors">?�프 가?�드</Link>
+            <Link to="/complications" className="hover:text-red-600 transition-colors">?�병�??�방</Link>
           </nav>
           
           <div className="w-16"></div>
@@ -316,44 +306,44 @@ export default function Dashboard() {
         <div className="mb-10 flex justify-between items-end">
           <div>
             <h2 className="text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight">
-              {data?.user_name || "회원"}님의 대시보드
+              {data?.user_name || "?�원"}?�의 ?�?�보??
             </h2>
-            <p className="text-gray-500 font-medium">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+            <p className="text-gray-500 font-medium">최근 100?�간???�이?�로�?�??�슐�??�여 기록 분석</p>
           </div>
           <div className="flex gap-3">
             <button 
               onClick={handleCapture}
               className="px-4 py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2"
-              title="화면 캡쳐"
+              title="?�면 캡쳐"
             >
               <Camera className="w-5 h-5"/>
-              <span className="hidden sm:inline">화면 캡쳐</span>
+              <span className="hidden sm:inline">?�면 캡쳐</span>
             </button>
             <button 
               onClick={handleReport}
               className="px-4 py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2"
-              title="레포트 PDF"
+              title="?�포??PDF"
             >
               <FileDown className="w-5 h-5"/>
-              <span className="hidden sm:inline">레포트 PDF</span>
+              <span className="hidden sm:inline">?�포??PDF</span>
             </button>
             <button 
               onClick={() => setIsModalOpen(true)}
               className="px-6 py-3 bg-[#17409c] text-white font-bold rounded-full hover:bg-blue-800 transition-colors shadow-lg flex items-center gap-2 ml-2"
             >
               <Plus className="w-5 h-5"/>
-              수동 기록
+              ?�동 기록
             </button>
           </div>
         </div>
 
         {/* 1. TOP ROW: 5 Gauge Charts */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          <KPIDonut value={targetBgPercent} maxValue={100} label="목표 혈당 달성률" unit="%" color={PRIMARY_COLOR} />
-          <KPIDonut value={avgBg} maxValue={300} label="평균 혈당" unit="mg/dL" color={SECONDARY_COLOR} />
+          <KPIDonut value={targetBgPercent} maxValue={100} label="목표 ?�당 ?�성�? unit="%" color={PRIMARY_COLOR} />
+          <KPIDonut value={avgBg} maxValue={300} label="?�균 ?�당" unit="mg/dL" color={SECONDARY_COLOR} />
           <KPIDonut value={avgBasal} maxValue={30} label="금일 기초 주입" unit="U" color={ACCENT_COLOR} />
-          <KPIDonut value={avgBolus} maxValue={50} label="금일 식사 주입" unit="U" color="#f59e0b" />
-          <KPIDonut value={avgAppend} maxValue={20} label="금일 추가 주입" unit="U" color="#8b5cf6" />
+          <KPIDonut value={avgBolus} maxValue={50} label="금일 ?�사 주입" unit="U" color="#f59e0b" />
+          <KPIDonut value={avgAppend} maxValue={20} label="금일 추�? 주입" unit="U" color="#8b5cf6" />
         </div>
 
         {/* 2. MIDDLE ROW: Summary Table (Left) & Trend Line Chart (Right) */}
@@ -362,25 +352,25 @@ export default function Dashboard() {
           <div className="lg:col-span-4 flex flex-col gap-6">
             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 h-full">
               <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-[#1cb085]"/> 라이프로그 요약 (최근 7일)
+                <Activity className="w-5 h-5 text-[#1cb085]"/> ?�이?�로�??�약 (최근 7??
               </h3>
               <div className="space-y-4">
                 {latestLogs.slice(0, 7).map((log, i) => (
                   <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                     <div className="flex flex-col">
                       <span className="font-bold text-gray-700">{log.date}</span>
-                      <span className="text-xs text-gray-500">{log.event_tags || '특이사항 없음'}</span>
+                      <span className="text-xs text-gray-500">{log.event_tags || '?�이?�항 ?�음'}</span>
                     </div>
                     <div className="text-right flex items-center gap-4">
                        <div className="flex flex-col items-center" title="CGM">
                          <Droplet className="w-3 h-3 text-red-400 mb-0.5"/>
                          <span className="text-xs font-bold text-gray-700">{log.avg_cgm.toFixed(0)}</span>
                        </div>
-                       <div className="flex flex-col items-center" title="수면">
+                       <div className="flex flex-col items-center" title="?�면">
                          <Moon className="w-3 h-3 text-indigo-400 mb-0.5"/>
                          <span className="text-xs font-bold text-gray-700">{log.sleep_hours.toFixed(1)}h</span>
                        </div>
-                       <div className="flex flex-col items-center" title="스트레스">
+                       <div className="flex flex-col items-center" title="?�트?�스">
                          <Zap className="w-3 h-3 text-yellow-500 mb-0.5"/>
                          <span className="text-xs font-bold text-gray-700">{log.stress_level}</span>
                        </div>
@@ -395,26 +385,26 @@ export default function Dashboard() {
           <div className="lg:col-span-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
              <div className="flex justify-between items-center mb-6">
                <div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-1">인슐린 & 혈당 복합 트렌드</h3>
-                  <p className="text-sm text-gray-500">30일 단위 CGM 혈당과 인슐린 주입량 비교 (오른쪽이 최신)</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">?�슐�?& ?�당 복합 ?�렌??/h3>
+                  <p className="text-sm text-gray-500">30???�위 CGM ?�당�??�슐�?주입??비교 (?�른쪽이 최신)</p>
                </div>
                <div className="flex items-center gap-2">
                  <button 
                    onClick={() => setPageOffset(prev => Math.min(maxPage, prev + 1))}
                    disabled={pageOffset >= maxPage}
                    className={`p-2 rounded-lg border ${pageOffset >= maxPage ? 'text-gray-300 border-gray-200' : 'text-gray-600 border-gray-300 hover:bg-gray-100'} transition-colors`}
-                   title="이전 30일"
+                   title="?�전 30??
                  >
                    <ChevronLeft className="w-5 h-5"/>
                  </button>
                  <span className="text-sm font-bold text-gray-600 min-w-[60px] text-center">
-                   {pageOffset === 0 ? '최근 30일' : `과거 ${pageOffset*30}~${(pageOffset+1)*30}일`}
+                   {pageOffset === 0 ? '최근 30?? : `과거 ${pageOffset*30}~${(pageOffset+1)*30}??}
                  </span>
                  <button 
                    onClick={() => setPageOffset(prev => Math.max(0, prev - 1))}
                    disabled={pageOffset === 0}
                    className={`p-2 rounded-lg border ${pageOffset === 0 ? 'text-gray-300 border-gray-200' : 'text-gray-600 border-gray-300 hover:bg-gray-100'} transition-colors`}
-                   title="다음 30일"
+                   title="?�음 30??
                  >
                    <ChevronRight className="w-5 h-5"/>
                  </button>
@@ -444,9 +434,9 @@ export default function Dashboard() {
                     <Tooltip content={<CustomTooltip />} />
                     <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }}/>
                     <Area yAxisId="left" type="monotone" dataKey="basal" name="기초 주입" stroke={ACCENT_COLOR} fillOpacity={1} fill="url(#colorBasal)" />
-                    <Area yAxisId="left" type="monotone" dataKey="bolus" name="식사 주입" stroke={SECONDARY_COLOR} fillOpacity={1} fill="url(#colorBolus)" />
-                    <Area yAxisId="left" type="monotone" dataKey="append" name="추가 주입" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorAppend)" />
-                    <Line yAxisId="right" type="monotone" dataKey="avg_cgm" name="평균 혈당" stroke={DANGER_COLOR} strokeWidth={2} dot={{r: 2, fill: DANGER_COLOR}} />
+                    <Area yAxisId="left" type="monotone" dataKey="bolus" name="?�사 주입" stroke={SECONDARY_COLOR} fillOpacity={1} fill="url(#colorBolus)" />
+                    <Area yAxisId="left" type="monotone" dataKey="append" name="추�? 주입" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorAppend)" />
+                    <Line yAxisId="right" type="monotone" dataKey="avg_cgm" name="?�균 ?�당" stroke={DANGER_COLOR} strokeWidth={2} dot={{r: 2, fill: DANGER_COLOR}} />
                   </ComposedChart>
                 </ResponsiveContainer>
              </div>
@@ -457,27 +447,18 @@ export default function Dashboard() {
         {pumpLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).length > 0 && (
           <div className="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-hidden">
             <h3 className="text-lg font-bold text-[#17409c] mb-4 flex items-center gap-2">
-              <Zap className="w-5 h-5"/> 최근 주요 라이프로그 이벤트
+              <Zap className="w-5 h-5"/> 최근 주요 ?�이?�로�??�벤??
             </h3>
             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              {(todayLog ? [todayLog] : []).filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).map((log, idx) => (
-                <div key={`today-${idx}`} className="flex-shrink-0 bg-blue-100 px-5 py-3 rounded-2xl border border-blue-200 flex flex-col gap-1 min-w-[150px]">
-                  <span className="text-xs font-bold text-blue-800">오늘 ({log.date})</span>
-                  <div className="flex gap-2 flex-wrap mt-1 items-center">
-                    {log.exercise_hours > 0 && <span className="text-sm font-bold text-emerald-700">운동 {log.exercise_hours}h</span>}
-                    {log.reception_hours > 0 && <span className="text-sm font-bold text-orange-700">회식 {log.reception_hours}h</span>}
-                  </div>
-                </div>
-              ))}
-              {pastLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).slice(-15).map((log, idx) => (
-                <div key={`past-${idx}`} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
+              {pumpLogs.filter(log => log.exercise_hours > 0 || log.reception_hours > 0 || log.notes).slice(-15).map((log, idx) => (
+                <div key={idx} className="flex-shrink-0 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100 flex flex-col gap-1 min-w-[150px]">
                   <span className="text-xs font-bold text-gray-400">{log.date}</span>
                   <div className="flex gap-2 flex-wrap mt-1 items-center">
                     {log.exercise_hours > 0 && (
-                      <span className="text-sm font-bold text-emerald-600 bg-emerald-100/80 px-2.5 py-1 rounded-lg shadow-sm">운동 {log.exercise_hours}h</span>
+                      <span className="text-sm font-bold text-emerald-600 bg-emerald-100/80 px-2.5 py-1 rounded-lg shadow-sm">?�동 {log.exercise_hours}h</span>
                     )}
                     {log.reception_hours > 0 && (
-                      <span className="text-sm font-bold text-orange-600 bg-orange-100/80 px-2.5 py-1 rounded-lg shadow-sm">회식 {log.reception_hours}h</span>
+                      <span className="text-sm font-bold text-orange-600 bg-orange-100/80 px-2.5 py-1 rounded-lg shadow-sm">?�식 {log.reception_hours}h</span>
                     )}
                     {log.notes && (
                       <div className="group relative flex items-center justify-center p-1 bg-white rounded-md shadow-sm border border-gray-200 cursor-help">
@@ -559,9 +540,9 @@ export default function Dashboard() {
           {/* Error Chart */}
           <div className="lg:col-span-4 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col">
             <h3 className="text-lg font-bold text-gray-800 mb-1 flex items-center gap-2">
-               <AlertTriangle className="w-5 h-5 text-red-500"/> 오류 상태 분석
+               <AlertTriangle className="w-5 h-5 text-red-500"/> ?�류 ?�태 분석
             </h3>
-            <p className="text-sm text-gray-500 mb-6">최근 100일간 발생한 펌프 오류 통계</p>
+            <p className="text-sm text-gray-500 mb-6">최근 100?�간 발생???�프 ?�류 ?�계</p>
             
             <div className="flex-1 w-full min-h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -608,7 +589,7 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
   const [datetime, setDatetime] = useState<string>(localISOTime);
   
   const [value, setValue] = useState<number>(100);
-  const [tag, setTag] = useState<string>('식후');
+  const [tag, setTag] = useState<string>('?�후');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -622,7 +603,7 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
       onSuccess();
     } catch (e) {
       console.error(e);
-      alert('저장에 실패했습니다.');
+      alert('?�?�에 ?�패?�습?�다.');
     } finally {
       setLoading(false);
     }
@@ -636,29 +617,29 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
         </button>
         
         <div className="p-8 md:p-10 max-h-[90vh] overflow-y-auto">
-          <h3 className="text-2xl md:text-3xl font-bold font-serif text-[#17409c] mb-6">라이프로그 기록</h3>
+          <h3 className="text-2xl md:text-3xl font-bold font-serif text-[#17409c] mb-6">?�이?�로�?기록</h3>
           
           <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl">
-            <button onClick={() => {setTab('bg'); setValue(100);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'bg' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>혈당</button>
-            <button onClick={() => {setTab('sleep'); setValue(7.5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'sleep' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>수면</button>
-            <button onClick={() => {setTab('stress'); setValue(5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'stress' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>스트레스</button>
+            <button onClick={() => {setTab('bg'); setValue(100);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'bg' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>?�당</button>
+            <button onClick={() => {setTab('sleep'); setValue(7.5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'sleep' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>?�면</button>
+            <button onClick={() => {setTab('stress'); setValue(5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'stress' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>?�트?�스</button>
           </div>
           
           <div className="space-y-8">
             {tab === 'bg' && (
               <>
                 <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                  <label className="block text-sm font-bold text-[#17409c] mb-2">측정 일시</label>
+                  <label className="block text-sm font-bold text-[#17409c] mb-2">측정 ?�시</label>
                   <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)} className="w-full bg-transparent border-none text-base md:text-lg font-medium text-gray-900 focus:ring-0 outline-none"/>
                 </div>
                 <div className="flex flex-col items-center py-4">
-                  <span className="text-sm font-bold text-gray-500 mb-4">혈당 수치 (mg/dL)</span>
+                  <span className="text-sm font-bold text-gray-500 mb-4">?�당 ?�치 (mg/dL)</span>
                   <input type="number" value={value} onChange={e => setValue(Number(e.target.value))} className="text-6xl md:text-7xl font-bold text-center text-[#17409c] w-full outline-none border-b-2 border-transparent focus:border-[#17409c] bg-transparent py-2 transition-colors font-serif"/>
                 </div>
                 <div>
-                  <span className="block text-sm font-bold text-gray-500 mb-3 text-center">측정 상태 태그</span>
+                  <span className="block text-sm font-bold text-gray-500 mb-3 text-center">측정 ?�태 ?�그</span>
                   <div className="flex gap-2 justify-center flex-wrap">
-                    {['기상직후', '공복', '식전', '식후', '취침전', '기타'].map(t => (
+                    {['기상직후', '공복', '?�전', '?�후', '취침??, '기�?'].map(t => (
                       <button key={t} onClick={() => setTag(t)} className={`px-4 md:px-5 py-2 md:py-2.5 rounded-full text-sm font-bold transition-all shadow-sm ${tag === t ? 'bg-[#17409c] text-white scale-105' : 'bg-white text-gray-500 border border-gray-200 hover:border-[#17409c]'}`}>{t}</button>
                     ))}
                   </div>
@@ -668,7 +649,7 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
 
             {tab === 'sleep' && (
               <div className="flex flex-col items-center py-10">
-                <span className="text-sm font-bold text-gray-500 mb-4">어젯밤 수면 시간 (시간)</span>
+                <span className="text-sm font-bold text-gray-500 mb-4">?�젯�??�면 ?�간 (?�간)</span>
                 <div className="flex items-end gap-2">
                   <input type="number" step="0.5" value={value} onChange={e => setValue(Number(e.target.value))} className="text-6xl md:text-7xl font-bold text-center text-[#17409c] w-32 md:w-40 outline-none border-b-2 border-transparent focus:border-[#17409c] bg-transparent py-2 transition-colors font-serif"/>
                   <span className="text-xl md:text-2xl font-bold text-gray-400 mb-4">h</span>
@@ -678,14 +659,14 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
 
             {tab === 'stress' && (
               <div className="flex flex-col items-center py-10">
-                <span className="text-sm font-bold text-gray-500 mb-4">오늘의 스트레스 지수 (1~10)</span>
+                <span className="text-sm font-bold text-gray-500 mb-4">?�늘???�트?�스 지??(1~10)</span>
                 <input type="range" min="1" max="10" value={value} onChange={e => setValue(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#17409c] mb-10"/>
                 <div className="text-6xl md:text-7xl font-bold text-center text-[#17409c] font-serif">{value}</div>
               </div>
             )}
 
             <button onClick={handleSubmit} disabled={loading} className="w-full py-4 md:py-5 rounded-2xl bg-[#17409c] text-white font-bold text-lg hover:bg-blue-800 transition-colors mt-4 disabled:opacity-50 shadow-lg">
-              {loading ? '저장 중...' : '이 기록 저장하기'}
+              {loading ? '?�??�?..' : '??기록 ?�?�하�?}
             </button>
           </div>
         </div>
@@ -693,3 +674,4 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
     </div>
   );
 }
+
