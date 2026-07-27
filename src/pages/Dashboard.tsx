@@ -176,8 +176,9 @@ export default function Dashboard() {
 
   const pumpLogs = data?.pump_logs || [];
   
-  // KST 기준 오늘 날짜 구하기 (안전하게 로컬 시간대로 가져오기)
-  const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  // KST 기준 오늘 날짜 구하기 (백엔드가 'M/D' 포맷으로 던져줌)
+  const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+  const todayStr = `${kstNow.getMonth() + 1}/${kstNow.getDate()}`;
   
   // 오늘 데이터와 과거(어제 이전) 데이터 분리
   const todayLog = pumpLogs.find(log => log.date === todayStr) || null;

@@ -54,7 +54,7 @@ const dummyDashboardData: DashboardData = {
     d.setDate(d.getDate() - (29 - i));
     const isWeekend = d.getDay() === 0 || d.getDay() === 6;
     return {
-      date: d.toISOString().slice(0, 10),
+      date: `${d.getMonth() + 1}/${d.getDate()}`,
       basal: 10 + Math.random() * 2,
       bolus: isWeekend ? 25 + Math.random() * 5 : 15 + Math.random() * 5,
       append: isWeekend ? 0 : Math.random() * 5,
@@ -109,7 +109,8 @@ export default function SampleDashboard() {
   const pumpLogs = data?.pump_logs || [];
   
   // KST 기준 오늘 날짜 구하기
-  const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+  const todayStr = `${kstNow.getMonth() + 1}/${kstNow.getDate()}`;
   
   // 오늘 데이터와 과거(어제 이전) 데이터 분리
   const todayLog = pumpLogs.find(log => log.date === todayStr) || null;
