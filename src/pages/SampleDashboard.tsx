@@ -271,18 +271,18 @@ export default function SampleDashboard() {
         </Link>
       </div>
 
-      <main className="max-w-7xl mx-auto px-6 py-10 relative z-10">
-        <div className="mb-10 flex justify-between items-end">
+      <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50">
+        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight break-keep">
               {data?.user_name || "회원"}님의 대시보드
             </h2>
-            <p className="text-gray-500 font-medium">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+            <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
           </div>
         </div>
 
         {/* 1. TOP ROW: 5 Gauge Charts */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
           <KPIDonut value={targetBgPercent} maxValue={100} label="목표 혈당 달성률" unit="%" color={PRIMARY_COLOR} />
           <KPIDonut value={avgBg} maxValue={300} label="평균 혈당" unit="mg/dL" color={SECONDARY_COLOR} />
           <KPIDonut value={avgBasal} maxValue={30} label="금일 기초 주입" unit="U" color={ACCENT_COLOR} />

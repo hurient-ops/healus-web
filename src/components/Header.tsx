@@ -49,25 +49,25 @@ export default function Header() {
           <Link to="/complications" className={`${isActive('/complications') ? 'text-red-600 font-bold' : 'hover:text-red-600'} transition-colors`}>합병증 예방</Link>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           {isLoggedIn ? (
             <>
-              <Link to="/dashboard" className="text-gray-700 font-medium hover:text-[#17409c] transition-colors">
-                <span className="font-bold text-[#17409c]">{user?.name || user?.email || '회원'}</span>님
+              <Link to="/dashboard" className="text-gray-700 font-medium hover:text-[#17409c] transition-colors flex items-center">
+                <span className="font-bold text-[#17409c] max-w-[80px] sm:max-w-[120px] md:max-w-[150px] truncate inline-block align-bottom">{user?.name || user?.email || '회원'}</span>님
               </Link>
               <button 
                 onClick={handleLogout} 
-                className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-red-500 hover:text-red-500 transition-all shadow-sm"
+                className="px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-red-500 hover:text-red-500 transition-all shadow-sm whitespace-nowrap"
               >
                 로그아웃
               </button>
             </>
           ) : (
             <>
-              <Link to="/signup" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm">
+              <Link to="/signup" className="px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm whitespace-nowrap">
                 회원가입
               </Link>
-              <Link to="/login" className="px-6 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm">
+              <Link to="/login" className="px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm whitespace-nowrap">
                 로그인
               </Link>
             </>

@@ -94,10 +94,10 @@ export default function Home() {
               <span className="inline-block px-4 py-1.5 bg-blue-500/20 text-blue-300 font-bold tracking-widest rounded-full mb-6 border border-blue-500/30 backdrop-blur-sm shadow-lg">
                 {slide.title}
               </span>
-              <h1 className="text-5xl md:text-6xl font-bold text-white leading-[1.2] mb-6 tracking-tight drop-shadow-lg">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-[1.2] mb-6 tracking-tight drop-shadow-lg break-keep">
                 {slide.heading}
               </h1>
-              <p className="text-xl text-gray-300 mb-10 leading-relaxed font-light drop-shadow-md">
+              <p className="text-lg sm:text-xl text-gray-300 mb-10 leading-relaxed font-light drop-shadow-md break-keep">
                 {slide.desc}
               </p>
               <Link to={isLoggedIn ? "/dashboard" : "/login"} className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#17409c] font-bold rounded-full hover:bg-gray-100 transition-all shadow-2xl hover:scale-105">

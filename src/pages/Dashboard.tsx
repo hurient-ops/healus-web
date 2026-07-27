@@ -312,7 +312,7 @@ export default function Dashboard() {
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop')", backgroundSize: 'cover', backgroundAttachment: 'fixed' }}></div>
       
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm relative">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between flex-wrap gap-4">
           <Link to="/" className="flex items-center gap-2 text-[#17409c] hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-[#17409c] rounded-xl flex items-center justify-center shadow-sm">
               <Activity className="w-5 h-5 text-white" />
@@ -327,22 +327,22 @@ export default function Dashboard() {
             <Link to="/complications" className="hover:text-red-600 transition-colors">합병증 예방</Link>
           </nav>
           
-          <div className="w-16"></div>
+          <div className="w-16 hidden md:block"></div>
         </div>
       </header>
 
-      <main id="dashboard-content" className="max-w-7xl mx-auto px-6 py-10 relative z-10 bg-gray-50">
-        <div className="mb-10 flex justify-between items-end">
+      <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50">
+        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight break-keep">
               {data?.user_name || "회원"}님의 대시보드
             </h2>
-            <p className="text-gray-500 font-medium">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+            <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3 flex-wrap">
             <button 
               onClick={handleCapture}
-              className="px-4 py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2"
+              className="px-3 py-2 sm:px-4 sm:py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2 whitespace-nowrap"
               title="화면 캡쳐"
             >
               <Camera className="w-5 h-5"/>
@@ -350,7 +350,7 @@ export default function Dashboard() {
             </button>
             <button 
               onClick={handleReport}
-              className="px-4 py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2"
+              className="px-3 py-2 sm:px-4 sm:py-3 bg-white text-gray-700 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-sm border border-gray-200 flex items-center gap-2 whitespace-nowrap"
               title="레포트 PDF"
             >
               <FileDown className="w-5 h-5"/>
@@ -367,7 +367,7 @@ export default function Dashboard() {
         </div>
 
         {/* 1. TOP ROW: 5 Gauge Charts */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
           <KPIDonut value={targetBgPercent} maxValue={100} label="목표 혈당 달성률" unit="%" color={PRIMARY_COLOR} />
           <KPIDonut value={avgBg} maxValue={300} label="평균 혈당" unit="mg/dL" color={SECONDARY_COLOR} />
           <KPIDonut value={avgBasal} maxValue={30} label="금일 기초 주입" unit="U" color={ACCENT_COLOR} />
