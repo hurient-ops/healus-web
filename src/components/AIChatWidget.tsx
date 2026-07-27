@@ -7,7 +7,11 @@ interface Message {
   content: string;
 }
 
-export default function AIChatWidget() {
+interface AIChatWidgetProps {
+  contextData?: string;
+}
+
+export default function AIChatWidget({ contextData }: AIChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: '안녕하세요! Healus AI 주치의입니다. 최근 건강 데이터나 당뇨 관리에 대해 궁금한 점이 있으신가요?' }
@@ -36,6 +40,7 @@ export default function AIChatWidget() {
     try {
       const response = await axios.post('/api/chat', {
         message: input.trim(),
+        contextData,
         history: messages.filter(m => m.role !== 'system').map(m => ({
           sender: m.role,
           text: m.content

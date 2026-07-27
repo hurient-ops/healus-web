@@ -6,6 +6,7 @@ import {
   ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   BarChart, Bar
 } from 'recharts';
+import AIChatWidget from '../components/AIChatWidget';
 
 interface BgLog {
   value: number;
@@ -227,6 +228,15 @@ export default function SampleDashboard() {
     }
     return null;
   };
+
+  const chatContext = `
+사용자 데이터 요약 (최근 100일 기준):
+- 평균 혈당: ${avgBg.toFixed(1)} mg/dL
+- 목표 혈당 달성률: ${targetBgPercent.toFixed(1)}%
+- 금일 기초 인슐린 주입: ${avgBasal.toFixed(1)} U
+- 금일 식사 인슐린 주입: ${avgBolus.toFixed(1)} U
+- 금일 추가 인슐린 주입: ${avgAppend.toFixed(1)} U
+`.trim();
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24 relative overflow-hidden">
@@ -526,6 +536,8 @@ export default function SampleDashboard() {
           }}
         />
       )}
+      
+      <AIChatWidget contextData={chatContext} />
     </div>
   );
 }
