@@ -190,7 +190,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">인슐린 펌프 가이드</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                기초 및 식사 주입량의 개념과 기기 알람 대처법을 완벽히 숙지하세요.
+                기초 및 식사 주입량의 개념과 기기 <br className="hidden lg:block" />알람 대처법을 완벽히 숙지하세요.
               </p>
             </Link>
 
@@ -201,7 +201,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-red-600 transition-colors">합병증 예방 가이드</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                망막병증, 신증, 당뇨발 등 무서운 합병증을 막는 필수 검진 수칙입니다.
+                망막병증, 신증, 당뇨발 등 무서운 <br className="hidden lg:block" />합병증을 막는 필수 검진 수칙입니다.
               </p>
             </Link>
 
