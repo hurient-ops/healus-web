@@ -120,9 +120,9 @@ export default function SampleDashboard() {
   // KPI Calculations
   const avgBg = pumpLogs.length ? pumpLogs.reduce((acc, log) => acc + log.avg_cgm, 0) / pumpLogs.length : 110;
   const targetBgPercent = pumpLogs.length ? (pumpLogs.filter(log => log.avg_cgm >= 70 && log.avg_cgm <= 180).length / pumpLogs.length) * 100 : 0;
-  const avgBasal = pumpLogs.length ? pumpLogs.reduce((acc, log) => acc + log.basal, 0) / pumpLogs.length : 0;
-  const avgBolus = pumpLogs.length ? pumpLogs.reduce((acc, log) => acc + log.bolus, 0) / pumpLogs.length : 0;
-  const avgAppend = pumpLogs.length ? pumpLogs.reduce((acc, log) => acc + log.append, 0) / pumpLogs.length : 0;
+  const latestDay = pumpLogs.length > 0 ? pumpLogs[pumpLogs.length - 1] : null;\n  const avgBasal = latestDay ? latestDay.basal : 0;
+  const avgBolus = latestDay ? latestDay.bolus : 0;
+  const avgAppend = latestDay ? latestDay.append : 0;
 
   // Recent Error processing for bottom right chart
   const ERROR_TYPES = ['주사기 막힘', '주입불가', '배터리 부족', '일시정지', '시간제한', '1 일 초과량 주입', '단위초과', '원인불명'];
