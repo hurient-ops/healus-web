@@ -695,10 +695,10 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
                   1(가장 평온함)부터 10(극심한 스트레스) 사이에서<br/>오늘 하루 전반적으로 느낀 강도를 선택해주세요.
                 </p>
                 <input type="range" min="1" max="10" value={value} onChange={e => setValue(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#17409c] mb-2"/>
-                <div className="flex justify-between w-full px-2 text-xs font-bold text-gray-400 mb-8">
-                  <span>1 (평온)</span>
-                  <span>5 (보통)</span>
-                  <span>10 (극심)</span>
+                <div className="grid grid-cols-3 w-full px-2 text-xs font-bold text-gray-400 mb-8">
+                  <span className="text-left">1 (평온)</span>
+                  <span className="text-center">5 (보통)</span>
+                  <span className="text-right">10 (극심)</span>
                 </div>
                 <div className="text-6xl md:text-7xl font-bold text-center text-[#17409c] font-serif">{value}</div>
               </div>
@@ -707,8 +707,20 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
             
             {tab === 'notes' && (
               <div className="flex flex-col items-center py-4">
-                <span className="text-sm font-bold text-gray-500 mb-4">특이사항 메모</span>
-                <textarea value={noteText} onChange={e => setNoteText(e.target.value)} placeholder="회식, 과식, 운동 등 특이사항을 자유롭게 기록해보세요." className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-base md:text-lg font-medium text-gray-900 focus:ring-2 focus:ring-[#17409c] outline-none min-h-[150px] resize-none"></textarea>
+                <span className="text-sm font-bold text-gray-500 mb-2">특이사항 메모</span>
+                <p className="text-xs text-gray-400 mb-4 text-center">
+                  최대 100자까지만 작성 가능합니다.
+                </p>
+                <textarea 
+                  value={noteText} 
+                  onChange={e => setNoteText(e.target.value)} 
+                  maxLength={100}
+                  placeholder="회식, 과식, 운동, 식사종류 등 특이사항을 자유롭게 기록해보세요." 
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-base md:text-lg font-medium text-gray-900 focus:ring-2 focus:ring-[#17409c] outline-none min-h-[150px] resize-none"
+                ></textarea>
+                <div className="text-right w-full text-xs font-mono mt-2 font-bold text-gray-400">
+                  {noteText.length} / 100 자
+                </div>
               </div>
             )}
             <button onClick={handleSubmit} disabled={loading} className="w-full py-4 md:py-5 rounded-2xl bg-[#17409c] text-white font-bold text-lg hover:bg-blue-800 transition-colors mt-4 disabled:opacity-50 shadow-lg">

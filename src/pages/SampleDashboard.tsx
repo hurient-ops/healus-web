@@ -513,15 +513,16 @@ export default function SampleDashboard() {
 
 // ... BgLogModal remains the same
 function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: () => void }) {
-  const [tab, setTab] = useState<'bg' | 'sleep' | 'stress'>('bg');
+  const [tab, setTab] = useState<'bg' | 'sleep' | 'stress' | 'notes'>('bg');
   
   const now = new Date();
   const tzOffset = now.getTimezoneOffset() * 60000;
   const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 16);
+  const [datetime, setDatetime] = useState<string>(localISOTime);
   
-  const [datetime, setDatetime] = useState(localISOTime);
   const [value, setValue] = useState<number>(100);
   const [tag, setTag] = useState<string>('식후');
+  const [noteText, setNoteText] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -548,6 +549,7 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
             <button onClick={() => {setTab('bg'); setValue(100);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'bg' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>혈당</button>
             <button onClick={() => {setTab('sleep'); setValue(7.5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'sleep' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>수면</button>
             <button onClick={() => {setTab('stress'); setValue(5);}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'stress' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>스트레스</button>
+            <button onClick={() => {setTab('notes'); setNoteText('');}} className={`flex-1 py-2 md:py-3 font-bold text-sm md:text-base rounded-lg transition-colors ${tab === 'notes' ? 'bg-white shadow text-[#17409c]' : 'text-gray-500 hover:text-gray-900'}`}>특이사항</button>
           </div>
           
           <div className="space-y-8">
@@ -584,12 +586,39 @@ function BgLogModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: ()
 
             {tab === 'stress' && (
               <div className="flex flex-col items-center py-10">
-                <span className="text-sm font-bold text-gray-500 mb-4">오늘의 스트레스 지수 (1~10)</span>
-                <input type="range" min="1" max="10" value={value} onChange={e => setValue(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#17409c] mb-10"/>
+                <span className="text-sm font-bold text-gray-500 mb-2">오늘의 스트레스 지수 (1~10)</span>
+                <p className="text-xs text-gray-400 mb-8 text-center px-4">
+                  1(가장 평온함)부터 10(극심한 스트레스) 사이에서<br/>오늘 하루 전반적으로 느낀 강도를 선택해주세요.
+                </p>
+                <input type="range" min="1" max="10" value={value} onChange={e => setValue(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#17409c] mb-2"/>
+                <div className="grid grid-cols-3 w-full px-2 text-xs font-bold text-gray-400 mb-8">
+                  <span className="text-left">1 (평온)</span>
+                  <span className="text-center">5 (보통)</span>
+                  <span className="text-right">10 (극심)</span>
+                </div>
                 <div className="text-6xl md:text-7xl font-bold text-center text-[#17409c] font-serif">{value}</div>
               </div>
             )}
 
+            
+            {tab === 'notes' && (
+              <div className="flex flex-col items-center py-4">
+                <span className="text-sm font-bold text-gray-500 mb-2">특이사항 메모</span>
+                <p className="text-xs text-gray-400 mb-4 text-center">
+                  최대 100자까지만 작성 가능합니다.
+                </p>
+                <textarea 
+                  value={noteText} 
+                  onChange={e => setNoteText(e.target.value)} 
+                  maxLength={100}
+                  placeholder="회식, 과식, 운동, 식사종류 등 특이사항을 자유롭게 기록해보세요." 
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-base md:text-lg font-medium text-gray-900 focus:ring-2 focus:ring-[#17409c] outline-none min-h-[150px] resize-none"
+                ></textarea>
+                <div className="text-right w-full text-xs font-mono mt-2 font-bold text-gray-400">
+                  {noteText.length} / 100 자
+                </div>
+              </div>
+            )}
             <button onClick={handleSubmit} disabled={loading} className="w-full py-4 md:py-5 rounded-2xl bg-[#17409c] text-white font-bold text-lg hover:bg-blue-800 transition-colors mt-4 disabled:opacity-50 shadow-lg">
               {loading ? '저장 중...' : '이 기록 체험해보기'}
             </button>
