@@ -7,14 +7,14 @@ const slides = [
   {
     image: "/images/hero_home_1.jpg",
     title: "스마트 당뇨 관리 솔루션",
-    heading: <>나만의 혈당 리듬,<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Healus</span>와 함께 완벽하게.</>,
+    heading: <>나만의 혈당 리듬,<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">HealUs</span>와 함께 완벽하게.</>,
     desc: "인슐린 펌프 데이터와 AI 통찰력이 만나, 당신의 하루를 더 안전하고 자유롭게 만듭니다. 지금 바로 과학적인 혈당 관리를 시작하세요."
   },
   {
     image: "/images/hero_home_2.jpg",
     title: "100% 데이터 분석",
     heading: <>모든 라이프로그를,<br/>하나의 <span className="text-blue-400">대시보드</span>에서.</>,
-    desc: "혈당 수치(CGM), 식사량, 수면 시간, 스트레스, 운동 기록까지. 흩어져 있던 당신의 모든 생체 데이터를 Healus가 하나로 모아 분석합니다."
+    desc: "혈당 수치(CGM), 식사량, 수면 시간, 스트레스, 운동 기록까지. 흩어져 있던 당신의 모든 생체 데이터를 HealUs가 하나로 모아 분석합니다."
   },
   {
     image: "/images/hero_home_3.jpg",
@@ -121,11 +121,11 @@ export default function Home() {
             </div>
             <h2 className="text-4xl font-bold text-gray-900 mb-6 tracking-tight font-serif">24시간 나와 함께하는<br />초개인화 AI 주치의</h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-8 break-keep">
-              단순히 수치만 보여주지 않습니다. Healus의 인공지능은 100일간의 식사, 수면, 운동 데이터를 입체적으로 분석하여 주말의 과식 패턴이나 운동 부족<br className="hidden lg:block" />여부를 스스로 찾아냅니다. 
+              단순히 수치만 보여주지 않습니다. HealUs의 인공지능은 100일간의 식사, 수면, 운동 데이터를 입체적으로 분석하여 주말의 과식 패턴이나 운동 부족<br className="hidden lg:block" />여부를 스스로 찾아냅니다. 
               그리고 <strong>'어떻게 이런 결론이 나왔는지'</strong> 추론 과정을 명확히 보여주어 100% 신뢰할 수 있습니다.
             </p>
             <Link to="/sample-dashboard" className="text-[#17409c] font-bold flex items-center gap-1 hover:gap-2 transition-all text-lg">
-              Healus AI 대시보드 체험하기 <ArrowRight className="w-5 h-5" />
+              HealUs AI 대시보드 체험하기 <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>
@@ -142,7 +142,7 @@ export default function Home() {
             <h2 className="text-4xl font-bold text-gray-900 mb-6 tracking-tight font-serif">흩어진 나의 건강 기록,<br />단 하나의 플랫폼으로</h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
               연속혈당측정기(CGM)의 실시간 혈당 수치와 인슐린 펌프의 주입량은 물론, 수면, 스트레스, 식단 기록까지  
-              <strong>모든 라이프로그를 Healus 한 곳에 모아</strong> <br className="hidden lg:block" />직관적인 차트와 트렌드로 한눈에 파악하세요. 복잡한 연동 과정 없이 <br className="hidden lg:block" />내 몸의 변화를 가장 정확하게 추적할 수 있습니다.
+              <strong>모든 라이프로그를 HealUs 한 곳에 모아</strong> <br className="hidden lg:block" />직관적인 차트와 트렌드로 한눈에 파악하세요. 복잡한 연동 과정 없이 <br className="hidden lg:block" />내 몸의 변화를 가장 정확하게 추적할 수 있습니다.
             </p>
           </div>
           <div className="w-full md:w-1/2">
@@ -156,7 +156,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight font-serif">당뇨 관리를 위한 완벽 가이드</h2>
-            <p className="text-lg text-gray-500">Healus가 제공하는 4가지 전문 의학 콘텐츠를 만나보세요.</p>
+            <p className="text-lg text-gray-500">HealUs가 제공하는 4가지 전문 의학 콘텐츠를 만나보세요.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -213,7 +213,7 @@ export default function Home() {
       <footer className="bg-gray-900 py-16 mt-auto">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between border-b border-gray-800 pb-10 mb-10">
           <div className="mb-6 md:mb-0">
-            <span className="text-3xl font-bold text-white tracking-tight">Healus</span>
+            <span className="text-3xl font-bold text-white tracking-tight">HealUs</span>
             <p className="text-gray-400 mt-2 text-sm max-w-sm">
               우리는 인공지능과 데이터 분석을 통해 모든 당뇨인들이 합병증의 두려움 없이 안전하고 자유로운 삶을 누릴 수 있도록 돕습니다.
             </p>
@@ -221,7 +221,7 @@ export default function Home() {
           <div className="flex gap-12 text-sm text-gray-400">
             <div className="flex flex-col gap-3">
               <h4 className="text-white font-bold mb-1">Company</h4>
-              <a href="#" className="hover:text-white transition-colors">Healus 소개</a>
+              <a href="#" className="hover:text-white transition-colors">HealUs 소개</a>
               <a href="#" className="hover:text-white transition-colors">블로그</a>
               <a href="#" className="hover:text-white transition-colors">채용안내</a>
             </div>
@@ -238,7 +238,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 text-center text-gray-600 text-xs font-mono">
-          © 2026 Healus Inc. All rights reserved.
+          © 2026 HealUs Inc. All rights reserved.
         </div>
       </footer>
 

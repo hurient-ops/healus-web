@@ -81,7 +81,7 @@ const dummyAiInsight: AiResponse = {
     "교차로 분석된 라이프로그 데이터 상 주말 운동 시간은 0이며 스트레스 지수는 낮아, 신체 활동량 저하가 혈당 상승의 주원인으로 분석됩니다.",
     "펌프 기류(막힘 등) 오류는 정상 범주로 확인되어 기기 문제는 배제하였습니다."
   ],
-  model: "Healus-Medi-LLM-v2",
+  model: "HealUs-Medi-LLM-v2",
   prompt_used: ""
 };
 
@@ -249,7 +249,7 @@ export default function SampleDashboard() {
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-[#17409c] rounded-xl flex items-center justify-center shadow-sm">
               <Activity className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-bold tracking-tight font-serif">Healus</span>
+            <span className="text-2xl font-bold tracking-tight font-serif">HealUs</span>
           </Link>
           
           <nav className="hidden md:flex items-center gap-8 font-normal text-gray-600">

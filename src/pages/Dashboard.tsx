@@ -317,7 +317,7 @@ export default function Dashboard() {
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-[#17409c] rounded-xl flex items-center justify-center shadow-sm">
               <Activity className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-bold tracking-tight font-serif">Healus</span>
+            <span className="text-2xl font-bold tracking-tight font-serif">HealUs</span>
           </Link>
           
           <nav className="hidden md:flex items-center gap-8 font-normal text-gray-600">

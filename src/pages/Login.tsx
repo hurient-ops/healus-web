@@ -75,7 +75,7 @@ export default function Login() {
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/80 to-transparent"></div>
           <div className="absolute bottom-12 left-12 right-12 text-white">
             <h2 className="text-4xl font-bold font-serif mb-4 leading-tight">건강한 내일을 위한<br />오늘의 기록</h2>
-            <p className="text-[var(--color-secondary-light)] text-lg">Healus AI 주치의와 함께 당신의 혈당 리듬을 완벽하게 관리하세요.</p>
+            <p className="text-[var(--color-secondary-light)] text-lg">HealUs AI 주치의와 함께 당신의 혈당 리듬을 완벽하게 관리하세요.</p>
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export default function Login() {
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-[#17409c] rounded-xl flex items-center justify-center shadow-sm">
                 <Activity className="w-6 h-6 text-white" />
               </div>
-              <span className="text-3xl font-bold tracking-tight font-serif">Healus</span>
+              <span className="text-3xl font-bold tracking-tight font-serif">HealUs</span>
             </Link>
             <h2 className="text-2xl font-bold mb-2">다시 오신 것을 환영합니다!</h2>
             <p className="text-[var(--color-text-muted)]">서비스 이용을 위해 로그인해 주세요. <br/><span className="text-blue-500 font-medium">(테스트용 계정: testuser@healus.com / password123)</span></p>

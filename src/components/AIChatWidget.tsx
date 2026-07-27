@@ -14,7 +14,7 @@ interface AIChatWidgetProps {
 export default function AIChatWidget({ contextData }: AIChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: '안녕하세요! Healus AI 주치의입니다. 최근 건강 데이터나 당뇨 관리에 대해 궁금한 점이 있으신가요?' }
+    { role: 'assistant', content: '안녕하세요! HealUs AI 주치의입니다. 최근 건강 데이터나 당뇨 관리에 대해 궁금한 점이 있으신가요?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -70,7 +70,7 @@ export default function AIChatWidget({ contextData }: AIChatWidgetProps) {
             <div className="flex items-center gap-2">
               <Bot className="w-6 h-6 text-blue-100" />
               <div>
-                <h3 className="font-bold text-lg leading-tight">Healus AI 주치의</h3>
+                <h3 className="font-bold text-lg leading-tight">HealUs AI 주치의</h3>
                 <p className="text-blue-100 text-xs">개인화된 건강 상담</p>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function AIChatWidget({ contextData }: AIChatWidgetProps) {
         <button 
           onClick={() => setIsOpen(true)}
           className="bg-gradient-to-r from-blue-500 to-[#17409c] text-white w-16 h-16 rounded-full shadow-[0_10px_25px_rgba(23,64,156,0.4)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(23,64,156,0.6)] transition-all hover:scale-110 active:scale-95 group relative"
-          title="Healus AI 주치의"
+          title="HealUs AI 주치의"
         >
           <Bot className="w-8 h-8 group-hover:rotate-12 transition-transform duration-300" />
           <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white animate-pulse"></div>

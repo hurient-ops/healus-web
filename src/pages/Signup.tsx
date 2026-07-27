@@ -92,7 +92,7 @@ export default function Signup() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#17409c]/90 to-transparent"></div>
           <div className="absolute bottom-12 left-12 right-12 text-white">
             <h2 className="text-4xl font-bold font-serif mb-4 leading-tight">나만의 혈당 리듬,<br />지금부터 시작하세요</h2>
-            <p className="text-blue-200 text-lg font-light">Healus와 인슐린 펌프를 연동하여 스마트한 관리를 시작하세요.</p>
+            <p className="text-blue-200 text-lg font-light">HealUs와 인슐린 펌프를 연동하여 스마트한 관리를 시작하세요.</p>
           </div>
         </div>
 
@@ -104,10 +104,10 @@ export default function Signup() {
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-[#17409c] rounded-xl flex items-center justify-center shadow-sm">
                 <Activity className="w-6 h-6 text-white" />
               </div>
-              <span className="text-3xl font-bold tracking-tight font-serif">Healus</span>
+              <span className="text-3xl font-bold tracking-tight font-serif">HealUs</span>
             </Link>
             <h2 className="text-3xl font-bold mb-2 font-serif text-gray-900">회원가입</h2>
-            <p className="text-gray-500">Healus 서비스 이용을 위해 계정을 생성해 주세요.</p>
+            <p className="text-gray-500">HealUs 서비스 이용을 위해 계정을 생성해 주세요.</p>
           </div>
 
 
