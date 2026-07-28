@@ -492,7 +492,7 @@ export default function Dashboard() {
                     {log.notes && (
                       <div className="group relative flex items-center justify-center p-1 bg-white rounded-md shadow-sm border border-gray-200 cursor-help">
                         <MessageSquare className="w-4 h-4 text-gray-500" />
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-xl">
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs break-keep p-2.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-xl leading-relaxed">
                           {log.notes}
                           <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
                         </div>
@@ -511,7 +511,7 @@ export default function Dashboard() {
                     {log.notes && (
                       <div className="group relative flex items-center justify-center p-1 bg-white/50 rounded-md shadow-sm border border-blue-200 cursor-help">
                         <MessageSquare className="w-4 h-4 text-blue-600" />
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-xl">
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs break-keep p-2.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-xl leading-relaxed">
                           {log.notes}
                           <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
                         </div>
