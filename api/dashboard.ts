@@ -10,6 +10,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -59,10 +62,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 역순(과거->최신) 정렬 필요 (차트에 렌더링하기 위함)
     const reversedPumpLogs = pumpLogs ? [...pumpLogs].reverse() : [];
     
-    const processed_pump_logs = reversedPumpLogs.map(log => ({
-      date: `${log.month}/${log.day}`,
-      basal: log.base_total,
-      bolus: log.eat_total,
+    const processed_pump_logs = reversedPumpLogs.map(log => {
+      let m = log.month;
+      let d = log.day;
+      
+      // month, day가 null이거나 없으면 created_at 혹은 recorded_at(있다면) 기반으로 추출
+      if (!m || !d) {
+        if (log.created_at) {
+          const dt = new Date(log.created_at);
+          // 한국 시간(KST, UTC+9) 기준으로 날짜를 맞추는 것이 더 정확할 수 있으나, 
+          // 기본적인 로컬 시간(서버 기준) 혹은 명시적으로 KST 적용
+          dt.setHours(dt.getHours() + 9);
+          m = dt.getUTCMonth() + 1;
+          d = dt.getUTCDate();
+        }
+      }
+      
+      return {
+        date: `${m}/${d}`,
+        basal: log.base_total,
+        bolus: log.eat_total,
       append: log.append_total,
       avg_cgm: log.avg_cgm,
       sleep_hours: log.sleep_hours,
@@ -73,7 +92,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       notes: log.notes,
       error_count: log.error_count,
       error_types: log.error_types
-    }));
+      };
+    });
 
     const userName = user.user_metadata?.name || user.email?.split('@')[0] || "사용자";
 
