@@ -41,7 +41,7 @@ export default function Privacy() {
               <h2 className="text-xl font-bold text-gray-900 mb-4">4. 개인정보 보호책임자</h2>
               <p>회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 정보주체의 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
               <ul className="list-none mt-2 bg-gray-50 p-4 rounded-lg">
-                <li>▶ 개인정보 보호책임자: 서재은 (대표이사)</li>
+                <li>▶ 개인정보 보호책임자: 김당뇨 (대표이사)</li>
                 <li>▶ 연락처: support@healus.com</li>
               </ul>
             </section>
