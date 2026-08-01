@@ -335,7 +335,7 @@ export default function Dashboard() {
         <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight break-keep">
-              {data?.user_name || "회원"}님의 대시보드
+              {JSON.parse(localStorage.getItem('user') || '{}')?.name || data?.user_name || "회원"}님의 대시보드
             </h2>
             <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
           </div>
