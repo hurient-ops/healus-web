@@ -9,6 +9,10 @@ import Diabetes from './pages/Diabetes';
 import Diet from './pages/Diet';
 import PumpGuide from './pages/PumpGuide';
 import Complications from './pages/Complications';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Faq from './pages/Faq';
+import Support from './pages/Support';
 
 function App() {
   return (
@@ -24,6 +28,10 @@ function App() {
         <Route path="/diet" element={<Diet />} />
         <Route path="/pump-guide" element={<PumpGuide />} />
         <Route path="/complications" element={<Complications />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     </div>
   )

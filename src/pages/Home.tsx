@@ -221,24 +221,22 @@ export default function Home() {
           <div className="flex gap-12 text-sm text-gray-400">
             <div className="flex flex-col gap-3">
               <h4 className="text-white font-bold mb-1">Company</h4>
-              <a href="#" className="hover:text-white transition-colors">HealUs 소개</a>
-              <a href="#" className="hover:text-white transition-colors">블로그</a>
-              <a href="#" className="hover:text-white transition-colors">채용안내</a>
+              <Link to="/" className="hover:text-white transition-colors">HealUs 소개</Link>
             </div>
             <div className="flex flex-col gap-3">
               <h4 className="text-white font-bold mb-1">Legal</h4>
-              <a href="#" className="hover:text-white transition-colors">이용약관</a>
-              <a href="#" className="hover:text-white transition-colors">개인정보처리방침</a>
+              <Link to="/terms" className="hover:text-white transition-colors">이용약관</Link>
+              <Link to="/privacy" className="hover:text-white transition-colors">개인정보처리방침</Link>
             </div>
             <div className="flex flex-col gap-3">
               <h4 className="text-white font-bold mb-1">Support</h4>
-              <a href="#" className="hover:text-white transition-colors">고객센터</a>
-              <a href="#" className="hover:text-white transition-colors">FAQ</a>
+              <Link to="/support" className="hover:text-white transition-colors">고객센터</Link>
+              <Link to="/faq" className="hover:text-white transition-colors">FAQ</Link>
             </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 text-center text-gray-600 text-xs font-mono">
-          © 2026 HealUs Inc. All rights reserved.
+          © {new Date().getFullYear()} HealUs Inc. All rights reserved.
         </div>
       </footer>
 
