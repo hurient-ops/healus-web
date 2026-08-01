@@ -13,10 +13,12 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Faq from './pages/Faq';
 import Support from './pages/Support';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <div className="min-h-screen bg-[var(--color-background)] font-sans text-[var(--color-text)]">
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
