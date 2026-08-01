@@ -42,9 +42,16 @@ export default function Login() {
           .single();
           
         if (userData) {
-          localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.setItem('user', JSON.stringify({
+            ...userData,
+            name: userData.name || data.user.user_metadata?.name || data.user.user_metadata?.full_name
+          }));
         } else {
-          localStorage.setItem('user', JSON.stringify({ email: data.user.email, id: data.user.id }));
+          localStorage.setItem('user', JSON.stringify({ 
+            email: data.user.email, 
+            id: data.user.id,
+            name: data.user.user_metadata?.name || data.user.user_metadata?.full_name
+          }));
         }
         
         localStorage.setItem('isLoggedIn', 'true');
