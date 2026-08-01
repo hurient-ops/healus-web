@@ -1,12 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Activity } from 'lucide-react';
+import { Activity, ChevronDown } from 'lucide-react';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -51,17 +63,41 @@ export default function Header() {
 
         <div className="flex items-center gap-2 md:gap-4">
           {isLoggedIn ? (
-            <>
-              <Link to="/dashboard" className="text-gray-700 font-medium hover:text-[#17409c] transition-colors flex items-center">
-                <span className="font-bold text-[#17409c]">{user?.name || user?.email || '회원'}</span>님
-              </Link>
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-1 text-gray-700 font-medium hover:text-[#17409c] transition-colors focus:outline-none"
+                >
+                  <span className="font-bold text-[#17409c]">{user?.name || user?.email || '회원'}</span>님
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+                    <Link 
+                      to="/dashboard" 
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#17409c] transition-colors"
+                    >
+                      대시보드 보기
+                    </Link>
+                    <Link 
+                      to="/profile" 
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#17409c] transition-colors"
+                    >
+                      개인정보 수정
+                    </Link>
+                  </div>
+                )}
+              </div>
               <button 
                 onClick={handleLogout} 
                 className="px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-red-500 hover:text-red-500 transition-all shadow-sm whitespace-nowrap"
               >
                 로그아웃
               </button>
-            </>
+            </div>
           ) : (
             <>
               <Link to="/signup" className="px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-full border border-gray-300 bg-white text-gray-700 font-normal hover:border-[#17409c] hover:text-[#17409c] transition-all shadow-sm whitespace-nowrap">
