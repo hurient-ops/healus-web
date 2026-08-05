@@ -372,12 +372,12 @@ export default function Dashboard() {
 
                 <div className="bg-white px-5 py-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-5 w-fit min-w-[240px]">
                   <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-                    <Syringe className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} transform="rotate(-45 12 12)" />
+                    <Syringe className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} transform="rotate(-135 12 12)" />
                     <div 
-                      className="absolute left-0 bottom-0 right-0 overflow-hidden transition-all duration-500" 
-                      style={{ height: `calc(20% + ${((data.pump_insulin_remaining ?? 300) / 300) * 60}%)` }}
+                      className="absolute right-0 top-0 bottom-0 overflow-hidden transition-all duration-500" 
+                      style={{ width: `calc(15% + ${((data.pump_insulin_remaining ?? 300) / 300) * 65}%)` }}
                     >
-                      <Syringe className="absolute left-0 bottom-0 text-blue-500 w-16 h-16" strokeWidth={1.5} fill="currentColor" transform="rotate(-45 12 12)" />
+                      <Syringe className="absolute right-0 top-0 text-blue-500 w-16 h-16" strokeWidth={1.5} fill="currentColor" transform="rotate(-135 12 12)" />
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col justify-center text-gray-700">
