@@ -144,33 +144,53 @@ export default function Dashboard() {
     }
 
     const formatU = (val: number) => Number(val.toFixed(1));
+    const toKoNum = (n: number) => ['영', '한', '두', '세', '네'][n] || n.toString();
 
     const battery = data?.pump_battery_level ?? 4;
     const insulin = data?.pump_insulin_remaining ?? 300;
     
-    // 시작 시 앞부분이 잘리는(Clipping) 현상을 막기 위한 웜업(Warm-up) 문구
-    let warningMsg = "힐어스 스마트 브리핑입니다. ";
-    if (battery <= 1) warningMsg += "주의! 펌프 배터리가 1칸 남았습니다. ";
+    // 시작 시 앞부분이 잘리는 현상을 막고 자연스러운 억양을 위한 쉼표 추가
+    let warningMsg = "힐어스, 스마트 브리핑입니다. ";
+    if (battery <= 1) warningMsg += `주의! 펌프 배터리가 ${toKoNum(battery)} 칸 남았습니다. `;
     if (insulin < 30) warningMsg += `주의! 인슐린 잔량이 ${formatU(insulin)} 유닛으로, 30 유닛 미만입니다. 교체가 필요합니다. `;
 
-    const statusMsg = `현재 펌프 배터리는 ${battery}칸, 인슐린은 ${formatU(insulin)} 유닛 남아있습니다. `;
+    const statusMsg = `현재 펌프 배터리는 ${toKoNum(battery)} 칸, 인슐린은 ${formatU(insulin)} 유닛 남아있습니다. `;
 
     const basal = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].basal : 0;
     const bolus = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].bolus : 0;
     const append = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].append : 0;
     const total = basal + bolus + append;
-    const dailyMsg = `오늘 하루 총 ${formatU(total)} 유닛을 주입했으며, 이 중 기초 주입은 ${formatU(basal)} 유닛, 식사 및 추가 주입은 ${formatU(bolus + append)} 유닛입니다. `;
+    const dailyMsg = `오늘 하루 총 ${formatU(total)} 유닛을 주입했으며, 이 중, 기초 주입은 ${formatU(basal)} 유닛, 식사 및 추가 주입은 ${formatU(bolus + append)} 유닛입니다. `;
 
     const insightMsg = aiData && aiData.insight && !aiData.insight.includes("오류") && !aiData.insight.includes("지연")
-      ? `오늘의 에이아이 주치의 조언입니다. ${aiData.insight}` 
+      ? `오늘의, 에이아이 주치의 조언입니다. ${aiData.insight}` 
       : "";
 
     const textToSpeak = warningMsg + statusMsg + dailyMsg + insightMsg;
 
-    window.speechSynthesis.cancel(); // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.lang = 'ko-KR';
-    utterance.rate = 1.05; // 발음을 또렷하게 하기 위해 속도를 조금 늦춤 (1.15 -> 1.05)
+    utterance.rate = 0.95; // 발음을 또렷하게 하기 위해 속도를 조금 더 낮춤 (자연스러운 억양)
+    utterance.pitch = 1.0;
+
+    // 고품질(클라우드 기반) 음성을 강제로 우선 선택
+    const setHighQualityVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      // Google의 고품질 한국어 음성(Chrome) 또는 macOS의 Yuna 등 자연스러운 음성을 최우선 선택
+      const bestVoice = voices.find(v => v.name.includes('Google') && v.lang === 'ko-KR')
+                     || voices.find(v => v.name.includes('Yuna') && v.lang === 'ko-KR')
+                     || voices.find(v => v.lang === 'ko-KR');
+      if (bestVoice) {
+        utterance.voice = bestVoice;
+      }
+    };
+
+    if (window.speechSynthesis.getVoices().length > 0) {
+      setHighQualityVoice();
+    } else {
+      window.speechSynthesis.onvoiceschanged = setHighQualityVoice;
+    }
     
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
