@@ -354,35 +354,35 @@ export default function Dashboard() {
             
             {data && (data.pump_battery_level !== undefined || data.pump_insulin_remaining !== undefined) && (
               <div className="flex flex-col sm:flex-row gap-4 mb-2">
-                <div className="bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-fit min-w-[200px]">
-                  <div className="relative w-8 h-8 shrink-0 flex items-center justify-center">
+                <div className="bg-white px-5 py-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-5 w-fit min-w-[240px]">
+                  <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
                     <Battery className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} />
                     <div 
-                      className="absolute left-0 top-0 bottom-0 overflow-hidden" 
+                      className="absolute left-0 top-0 bottom-0 overflow-hidden transition-all duration-500" 
                       style={{ width: `${((data.pump_battery_level ?? 4) / 4) * 100}%` }}
                     >
-                      <Battery className="absolute left-0 top-0 text-green-500 w-8 h-8" strokeWidth={1.5} fill="currentColor" />
+                      <Battery className="absolute left-0 top-0 text-green-500 w-16 h-16" strokeWidth={1.5} fill="currentColor" />
                     </div>
                   </div>
-                  <div className="flex-1 flex justify-between items-center text-sm font-bold text-gray-700 w-full gap-4">
-                    <span>배터리</span>
-                    <span className="text-green-600">{data.pump_battery_level ?? 4} / 4</span>
+                  <div className="flex-1 flex flex-col justify-center text-gray-700">
+                    <span className="text-sm font-bold text-gray-500 mb-1">배터리</span>
+                    <span className="text-2xl font-black text-green-600 tracking-tight">{data.pump_battery_level ?? 4} / 4</span>
                   </div>
                 </div>
 
-                <div className="bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-fit min-w-[200px]">
-                  <div className="relative w-8 h-8 shrink-0 flex items-center justify-center">
+                <div className="bg-white px-5 py-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-5 w-fit min-w-[240px]">
+                  <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
                     <Syringe className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} />
                     <div 
-                      className="absolute left-0 bottom-0 right-0 overflow-hidden" 
+                      className="absolute left-0 bottom-0 right-0 overflow-hidden transition-all duration-500" 
                       style={{ height: `${((data.pump_insulin_remaining ?? 300) / 300) * 100}%` }}
                     >
-                      <Syringe className="absolute left-0 bottom-0 text-blue-500 w-8 h-8" strokeWidth={1.5} fill="currentColor" />
+                      <Syringe className="absolute left-0 bottom-0 text-blue-500 w-16 h-16" strokeWidth={1.5} fill="currentColor" />
                     </div>
                   </div>
-                  <div className="flex-1 flex justify-between items-center text-sm font-bold text-gray-700 w-full gap-4">
-                    <span>인슐린 잔량</span>
-                    <span className="text-blue-500">{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
+                  <div className="flex-1 flex flex-col justify-center text-gray-700">
+                    <span className="text-sm font-bold text-gray-500 mb-1">인슐린 잔량</span>
+                    <span className="text-2xl font-black text-blue-500 tracking-tight">{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
                   </div>
                 </div>
               </div>
