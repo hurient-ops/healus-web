@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, MessageSquare, ChevronLeft, ChevronRight, Camera, FileDown, Volume2, StopCircle } from 'lucide-react';
+import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, MessageSquare, ChevronLeft, ChevronRight, Camera, FileDown, Volume2, StopCircle, Battery } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import {
@@ -36,6 +36,8 @@ interface DashboardData {
   user_name: string;
   pump_logs: PumpLog[];
   bg_logs: BgLog[];
+  pump_battery_level?: number;
+  pump_insulin_remaining?: number;
 }
 
 interface AiResponse {
@@ -389,7 +391,55 @@ export default function SampleDashboard() {
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight break-keep mb-2">
                   {data?.user_name || "회원"}님의 대시보드
                 </h2>
-                <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+                <p className="text-gray-500 font-medium break-keep mb-4">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+                
+                {data && (data.pump_battery_level !== undefined || data.pump_insulin_remaining !== undefined) && (
+                  <div className="flex flex-col sm:flex-row gap-4 mb-2">
+                    <div className="bg-white px-5 py-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-5 w-fit min-w-[240px]">
+                      <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
+                        <Battery className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} />
+                        <div 
+                          className="absolute left-0 top-0 bottom-0 overflow-hidden transition-all duration-500" 
+                          style={{ width: `calc(10% + ${((data.pump_battery_level ?? 4) / 4) * 75}%)` }}
+                        >
+                          <Battery className="absolute left-0 top-0 text-green-500 w-16 h-16" strokeWidth={1.5} fill="currentColor" />
+                        </div>
+                      </div>
+                      <div className="flex-1 flex flex-col justify-center text-gray-700">
+                        <span className="text-sm font-bold text-gray-500 mb-1">배터리</span>
+                        <span className="text-2xl font-black text-green-600 tracking-tight">{data.pump_battery_level ?? 4} / 4</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-white px-5 py-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-5 w-fit min-w-[240px]">
+                      <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" className="absolute inset-0 text-gray-200 w-full h-full" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="4" y="8" width="14" height="8" rx="1" />
+                          <rect x="18" y="10" width="2" height="4" rx="0.5" />
+                          <line x1="20" y1="12" x2="24" y2="12" />
+                          <line x1="1" y1="12" x2="4" y2="12" />
+                          <line x1="1" y1="9" x2="1" y2="15" />
+                        </svg>
+                        <div 
+                          className="absolute right-0 top-0 bottom-0 overflow-hidden transition-all duration-500" 
+                          style={{ width: `calc(25% + ${((data.pump_insulin_remaining ?? 300) / 300) * 58.3}%)` }}
+                        >
+                          <svg viewBox="0 0 24 24" className="absolute right-0 top-0 text-blue-500 w-16 h-16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="4" y="8" width="14" height="8" rx="1" fill="currentColor" />
+                            <rect x="18" y="10" width="2" height="4" rx="0.5" fill="currentColor" />
+                            <line x1="20" y1="12" x2="24" y2="12" />
+                            <line x1="1" y1="12" x2="4" y2="12" />
+                            <line x1="1" y1="9" x2="1" y2="15" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="flex-1 flex flex-col justify-center text-gray-700">
+                        <span className="text-sm font-bold text-gray-500 mb-1">인슐린 잔량</span>
+                        <span className="text-2xl font-black text-blue-500 tracking-tight">{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               
               <div className="flex items-center gap-3">
