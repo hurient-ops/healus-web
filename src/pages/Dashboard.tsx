@@ -197,15 +197,14 @@ export default function Dashboard() {
     }
   }, [pumpLogs]);
   
-  // 로컬 브라우저 시간 기준 오늘 날짜 구하기 ('M/D' 포맷)
-  const now = new Date();
-  const todayStr = `${now.getMonth() + 1}/${now.getDate()}`;
+  // 가장 최신 데이터를 '오늘(최근)' 데이터로 간주 (마지막 인덱스)
+  const todayLog = pumpLogs.length > 0 ? pumpLogs[pumpLogs.length - 1] : null;
+  const todayStr = todayLog ? todayLog.date : '';
   
-  // 오늘 데이터와 과거(어제 이전) 데이터 분리
-  const todayLog = pumpLogs.find(log => log.date === todayStr) || null;
+  // 최근 데이터와 과거 데이터 분리
   const pastLogs = pumpLogs.filter(log => log.date !== todayStr);
   
-  const latestLogs = [...pastLogs].reverse(); // 과거 데이터 중 최신(어제)이 0번 인덱스
+  const latestLogs = [...pastLogs].reverse(); // 과거 데이터 중 최신이 0번 인덱스
   
   // 페이징 계산 (차트용) - 과거 데이터 기준
   const totalDays = pastLogs.length;
