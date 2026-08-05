@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, MessageSquare, ChevronLeft, ChevronRight, Camera, FileDown, Volume2, StopCircle } from 'lucide-react';
+import { toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -54,18 +56,19 @@ const dummyDashboardData: DashboardData = {
     const d = new Date();
     d.setDate(d.getDate() - (29 - i));
     const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+    const isHighStress = Math.random() > 0.8;
     return {
       date: `${d.getMonth() + 1}/${d.getDate()}`,
-      basal: 10 + Math.random() * 2,
+      basal: isHighStress ? 13 + Math.random() * 2 : 10 + Math.random() * 2,
       bolus: isWeekend ? 25 + Math.random() * 5 : 15 + Math.random() * 5,
       append: isWeekend ? 0 : Math.random() * 5,
-      avg_cgm: isWeekend ? 145 + Math.random() * 20 : 105 + Math.random() * 10,
-      sleep_hours: isWeekend ? 8 : 5.5,
-      stress_level: isWeekend ? 2 : 8,
-      exercise_hours: isWeekend ? 0 : 1,
+      avg_cgm: isWeekend ? 145 + Math.random() * 20 : (isHighStress ? 135 + Math.random() * 15 : 105 + Math.random() * 10),
+      sleep_hours: isWeekend ? 8 : (isHighStress ? 4.5 : 6.5),
+      stress_level: isWeekend ? 2 : (isHighStress ? 9 : 4),
+      exercise_hours: isWeekend ? 0 : (Math.random() > 0.7 ? 1.5 : 0),
       reception_hours: isWeekend ? 0 : (Math.random() > 0.8 ? 2 : 0),
-      notes: isWeekend ? '주말 산책' : null,
-      event_tags: isWeekend ? '주말, 과식' : null,
+      notes: isWeekend ? '주말 휴식' : (isHighStress ? '야근으로 인한 수면 부족' : null),
+      event_tags: isWeekend ? '주말, 과식' : (isHighStress ? '야근, 스트레스' : null),
       error_count: Math.random() > 0.90 ? 1 : 0,
       error_types: Math.random() > 0.90 ? ['주사기 막힘', '주입불가', '배터리 부족', '일시정지', '시간제한', '1 일 초과량 주입', '단위초과', '원인불명'][Math.floor(Math.random() * 8)] : null,
     };
@@ -73,13 +76,17 @@ const dummyDashboardData: DashboardData = {
   bg_logs: []
 };
 
+// Add fake battery and insulin to dummy data
+(dummyDashboardData as any).pump_battery_level = 3;
+(dummyDashboardData as any).pump_insulin_remaining = 245.5;
+
 const dummyAiInsight: AiResponse = {
-  insight: "주말마다 수면 시간이 길어지지만 활동량이 줄어들며, 평일 대비 30% 이상 인슐린 요구량이 증가하고 식후 혈당 스파이크가 빈번하게 관찰됩니다. 주말 점심 식사 전 볼루스 주입량을 2U 늘리거나, 식후 30분 가벼운 산책을 강력히 권장합니다.",
+  insight: "평일 야근과 수면 부족이 겹치는 날(스트레스 8 이상), 일시적인 인슐린 저항성이 발생하여 평균 혈당이 135mg/dL 이상으로 상승하는 패턴이 발견되었습니다. 수면이 5시간 미만일 경우 오전 기초 주입량(Basal)을 15% 늘리는 것을 권장하며, 주말에는 신체 활동 저하로 인한 식후 혈당 스파이크에 주의하시기 바랍니다.",
   reasoning: [
-    "최근 30일간 주말(토/일)의 평균 CGM 수치가 평일 대비 평균 35mg/dL 높게 유지되고 있습니다.",
-    "특히 주말 오후 식사 주입(Bolus) 대비 혈당 강하 효과가 평일보다 15% 낮게 나타납니다 (일시적 인슐린 저항성 증가).",
-    "교차로 분석된 라이프로그 데이터 상 주말 운동 시간은 0이며 스트레스 지수는 낮아, 신체 활동량 저하가 혈당 상승의 주원인으로 분석됩니다.",
-    "펌프 기류(막힘 등) 오류는 정상 범주로 확인되어 기기 문제는 배제하였습니다."
+    "최근 30일간 수면 시간이 5시간 미만이고 스트레스 지수가 높은 6일의 데이터를 분석한 결과, 다음날 오전 인슐린 요구량이 평소 대비 20% 증가했습니다.",
+    "특히 평일 야근 다음날 식후 혈당 강하율이 18% 감소하여 일시적 인슐린 저항성이 뚜렷하게 관찰됩니다.",
+    "주말(토/일)의 경우 운동 시간은 0에 수렴하나 식사 주입량(Bolus)은 평일 대비 30% 증가하여, 잉여 칼로리로 인한 혈당 스파이크가 잦습니다.",
+    "펌프 기류(막힘 등) 오류는 전체 투여 기간 중 정상 범주(2% 미만)로 확인되어 기기 문제는 배제하였습니다."
   ],
   model: "HealUs-Medi-LLM-v2",
   prompt_used: ""
@@ -109,6 +116,103 @@ export default function SampleDashboard() {
     const t2 = setTimeout(() => setAiData(dummyAiInsight), 1500);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
+
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const handleSpeech = () => {
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    const formatU = (val: number) => Number(val.toFixed(1));
+    const toKoNum = (n: number) => ['영', '한', '두', '세', '네'][n] || n.toString();
+
+    const battery = (data as any)?.pump_battery_level ?? 4;
+    const insulin = (data as any)?.pump_insulin_remaining ?? 300;
+    
+    let warningMsg = "힐어스, 스마트 브리핑입니다. ";
+    if (battery <= 1) warningMsg += `주의! 펌프 배터리가 ${toKoNum(battery)} 칸 남았습니다. `;
+    if (insulin < 30) warningMsg += `주의! 인슐린 잔량이 ${formatU(insulin)} 유닛으로, 30 유닛 미만입니다. 교체가 필요합니다. `;
+
+    const statusMsg = `현재 펌프 배터리는 ${toKoNum(battery)} 칸, 인슐린은 ${formatU(insulin)} 유닛 남아있습니다. `;
+
+    const basal = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].basal : 0;
+    const bolus = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].bolus : 0;
+    const append = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].append : 0;
+    const total = basal + bolus + append;
+    const dailyMsg = `오늘 하루 총 ${formatU(total)} 유닛을 주입했으며, 이 중, 기초 주입은 ${formatU(basal)} 유닛, 식사 및 추가 주입은 ${formatU(bolus + append)} 유닛입니다. `;
+
+    const insightMsg = aiData && aiData.insight && !aiData.insight.includes("오류") && !aiData.insight.includes("지연")
+      ? `오늘의, 에이아이 주치의 조언입니다. ${aiData.insight}` 
+      : "";
+
+    const textToSpeak = warningMsg + statusMsg + dailyMsg + insightMsg;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'ko-KR';
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+
+    const setHighQualityVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const bestVoice = voices.find(v => v.name.includes('Google') && v.lang === 'ko-KR')
+                     || voices.find(v => v.name.includes('Yuna') && v.lang === 'ko-KR')
+                     || voices.find(v => v.lang === 'ko-KR');
+      if (bestVoice) {
+        utterance.voice = bestVoice;
+      }
+    };
+
+    if (window.speechSynthesis.getVoices().length > 0) {
+      setHighQualityVoice();
+    } else {
+      window.speechSynthesis.onvoiceschanged = setHighQualityVoice;
+    }
+    
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    setIsSpeaking(true);
+    setTimeout(() => {
+      window.speechSynthesis.speak(utterance);
+    }, 100);
+  };
+
+  const handleCapture = async () => {
+    const element = document.getElementById('dashboard-content');
+    if (!element) return;
+    try {
+      const image = await toPng(element, { pixelRatio: 2 });
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `healus_sample_dashboard_${new Date().toISOString().slice(0, 10)}.png`;
+      link.click();
+    } catch (e) {
+      console.error(e);
+      alert("캡쳐 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleReport = async () => {
+    const element = document.getElementById('dashboard-content');
+    if (!element) return;
+    try {
+      const imgData = await toPng(element, { pixelRatio: 2 });
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const elWidth = element.clientWidth;
+      const elHeight = element.clientHeight;
+      const pdfHeight = (elHeight * pdfWidth) / elWidth;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`healus_sample_report_${new Date().toISOString().slice(0, 10)}.pdf`);
+    } catch (e) {
+      console.error(e);
+      alert("PDF 생성 중 오류가 발생했습니다.");
+    }
+  };
 
   const pumpLogs = data?.pump_logs || [];
 
@@ -271,15 +375,42 @@ export default function SampleDashboard() {
         </Link>
       </div>
 
-      <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50">
-        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight break-keep">
-              {data?.user_name || "회원"}님의 대시보드
-            </h2>
-            <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+      <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50 min-h-[80vh]">
+        {!data ? (
+          <div className="flex flex-col items-center justify-center h-full w-full py-32 animate-in fade-in duration-500">
+            <Loader2 className="w-12 h-12 text-[#17409c] animate-spin mb-6" />
+            <h3 className="text-2xl font-bold font-serif text-gray-800 mb-2">건강 데이터를 동기화하고 있습니다</h3>
+            <p className="text-gray-500 font-medium">샘플 라이프로그를 분석 중입니다...</p>
           </div>
-        </div>
+        ) : (
+          <div className="animate-in fade-in duration-700">
+            <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight break-keep mb-2">
+                  {data?.user_name || "회원"}님의 대시보드
+                </h2>
+                <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={handleSpeech}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all border ${isSpeaking ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}
+                  title="스마트 브리핑"
+                >
+                  {isSpeaking ? <StopCircle className="w-4 h-4 animate-pulse" /> : <Volume2 className="w-4 h-4 text-[#17409c]" />}
+                  <span className="hidden sm:inline">{isSpeaking ? '브리핑 중지' : '스마트 브리핑'}</span>
+                </button>
+                <button onClick={handleCapture} className="flex items-center gap-2 px-4 py-2.5 bg-white text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors font-bold text-sm shadow-sm">
+                  <Camera className="w-4 h-4 text-gray-500" />
+                  <span className="hidden sm:inline">화면 캡처</span>
+                </button>
+                <button onClick={handleReport} className="flex items-center gap-2 px-4 py-2.5 bg-white text-[#17409c] border border-blue-100 rounded-xl hover:bg-blue-50 transition-colors font-bold text-sm shadow-sm">
+                  <FileDown className="w-4 h-4" />
+                  <span className="hidden sm:inline">레포트 PDF</span>
+                </button>
+              </div>
+            </div>
 
         {/* 1. TOP ROW: 5 Gauge Charts */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
@@ -524,7 +655,8 @@ export default function SampleDashboard() {
             </div>
           </div>
         </div>
-
+        </div>
+        )}
       </main>
 
       {isModalOpen && (
