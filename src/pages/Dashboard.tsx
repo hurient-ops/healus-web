@@ -144,7 +144,7 @@ export default function Dashboard() {
     }
 
     const battery = data?.pump_battery_level ?? 4;
-    const insulin = data?.pump_insulin_remaining !== undefined ? data.pump_insulin_remaining : 300;
+    const insulin = data?.pump_insulin_remaining ?? 300;
     
     let warningMsg = "";
     if (battery <= 1) warningMsg += "주의! 펌프 배터리가 1칸 남았습니다. ";
