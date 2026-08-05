@@ -93,7 +93,19 @@ export default function Dashboard() {
   const fetchDashboard = async () => {
     try {
       const res = await api.get('/dashboard');
-      setData(res.data.data);
+      let fetchedData: DashboardData = res.data.data;
+      
+      // 1. 날짜(date) 오름차순 정렬
+      fetchedData.pump_logs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      
+      // 2. 동일 날짜 중복 제거 (가장 마지막에 들어온 최신 데이터 1개만 유지)
+      const uniqueLogsMap = new Map<string, PumpLog>();
+      fetchedData.pump_logs.forEach(log => {
+        uniqueLogsMap.set(log.date, log);
+      });
+      fetchedData.pump_logs = Array.from(uniqueLogsMap.values());
+      
+      setData(fetchedData);
     } catch (e) {
       console.error(e);
     }
