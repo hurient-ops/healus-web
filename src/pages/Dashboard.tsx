@@ -354,33 +354,35 @@ export default function Dashboard() {
             
             {data && (data.pump_battery_level !== undefined || data.pump_insulin_remaining !== undefined) && (
               <div className="flex flex-col sm:flex-row gap-4 mb-2">
-                <div className="bg-white px-4 py-3 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-full sm:w-64">
-                  <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center shrink-0">
-                    <Battery className="w-5 h-5 text-green-600" />
+                <div className="bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-fit min-w-[200px]">
+                  <div className="relative w-8 h-8 shrink-0 flex items-center justify-center">
+                    <Battery className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} />
+                    <div 
+                      className="absolute left-0 top-0 bottom-0 overflow-hidden" 
+                      style={{ width: `${((data.pump_battery_level ?? 4) / 4) * 100}%` }}
+                    >
+                      <Battery className="absolute left-0 top-0 text-green-500 w-8 h-8" strokeWidth={1.5} fill="currentColor" />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
-                      <span>배터리</span>
-                      <span className="text-green-600">{data.pump_battery_level ?? 4} / 4</span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-green-500 h-1.5 rounded-full transition-all duration-500" style={{ width: `${((data.pump_battery_level ?? 4) / 4) * 100}%` }}></div>
-                    </div>
+                  <div className="flex-1 flex justify-between items-center text-sm font-bold text-gray-700 w-full gap-4">
+                    <span>배터리</span>
+                    <span className="text-green-600">{data.pump_battery_level ?? 4} / 4</span>
                   </div>
                 </div>
 
-                <div className="bg-white px-4 py-3 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-full sm:w-64">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                    <Syringe className="w-5 h-5 text-blue-500" />
+                <div className="bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-fit min-w-[200px]">
+                  <div className="relative w-8 h-8 shrink-0 flex items-center justify-center">
+                    <Syringe className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} />
+                    <div 
+                      className="absolute left-0 bottom-0 right-0 overflow-hidden" 
+                      style={{ height: `${((data.pump_insulin_remaining ?? 300) / 300) * 100}%` }}
+                    >
+                      <Syringe className="absolute left-0 bottom-0 text-blue-500 w-8 h-8" strokeWidth={1.5} fill="currentColor" />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
-                      <span>인슐린 잔량</span>
-                      <span className="text-blue-500">{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-blue-500 h-1.5 rounded-full transition-all duration-500" style={{ width: `${((data.pump_insulin_remaining ?? 300) / 300) * 100}%` }}></div>
-                    </div>
+                  <div className="flex-1 flex justify-between items-center text-sm font-bold text-gray-700 w-full gap-4">
+                    <span>인슐린 잔량</span>
+                    <span className="text-blue-500">{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
                   </div>
                 </div>
               </div>
