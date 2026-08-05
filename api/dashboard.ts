@@ -97,10 +97,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const userName = user.user_metadata?.name || user.email?.split('@')[0] || "사용자";
 
+    // Fetch custom user data to get pump status
+    const { data: customUser, error: customUserError } = await supabase
+      .from('users')
+      .select('pump_battery_level, pump_insulin_remaining')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (customUserError) {
+      console.error("User DB Error:", customUserError);
+    }
+
     return res.status(200).json({
       status: "success",
       data: {
         user_name: userName,
+        pump_battery_level: customUser?.pump_battery_level,
+        pump_insulin_remaining: customUser?.pump_insulin_remaining,
         pump_logs: processed_pump_logs,
         bg_logs: bgLogs ? bgLogs.map(bg => ({
           value: bg.glucose_value,
