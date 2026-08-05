@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown, MessageSquare, ChevronLeft, ChevronRight, Battery } from 'lucide-react';
+import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown, MessageSquare, ChevronLeft, ChevronRight, Battery, Syringe } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import axios from 'axios';
@@ -347,25 +347,44 @@ export default function Dashboard() {
       <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50">
         <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight break-keep">
-                {JSON.parse(localStorage.getItem('user') || '{}')?.name || data?.user_name || "회원"}님의 대시보드
-              </h2>
-              {data && (data.pump_battery_level !== undefined || data.pump_insulin_remaining !== undefined) && (
-                <div className="inline-flex items-center gap-3 bg-white px-4 py-1.5 rounded-full border border-gray-200 shadow-sm text-sm font-bold text-gray-700 w-fit">
-                  <div className="flex items-center gap-1.5" title="펌프 배터리">
-                    <Battery className="w-4 h-4 text-green-600" />
-                    <span>{data.pump_battery_level ?? 4} / 4</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight break-keep mb-2">
+              {JSON.parse(localStorage.getItem('user') || '{}')?.name || data?.user_name || "회원"}님의 대시보드
+            </h2>
+            <p className="text-gray-500 font-medium break-keep mb-4">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+            
+            {data && (data.pump_battery_level !== undefined || data.pump_insulin_remaining !== undefined) && (
+              <div className="flex flex-col sm:flex-row gap-4 mb-2">
+                <div className="bg-white px-4 py-3 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-full sm:w-64">
+                  <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center shrink-0">
+                    <Battery className="w-5 h-5 text-green-600" />
                   </div>
-                  <div className="w-px h-4 bg-gray-300"></div>
-                  <div className="flex items-center gap-1.5" title="인슐린 잔량">
-                    <Droplet className="w-4 h-4 text-blue-500" />
-                    <span>{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
+                  <div className="flex-1">
+                    <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
+                      <span>배터리</span>
+                      <span className="text-green-600">{data.pump_battery_level ?? 4} / 4</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-green-500 h-1.5 rounded-full transition-all duration-500" style={{ width: `${((data.pump_battery_level ?? 4) / 4) * 100}%` }}></div>
+                    </div>
                   </div>
                 </div>
-              )}
-            </div>
-            <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
+
+                <div className="bg-white px-4 py-3 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 w-full sm:w-64">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                    <Syringe className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
+                      <span>인슐린 잔량</span>
+                      <span className="text-blue-500">{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-blue-500 h-1.5 rounded-full transition-all duration-500" style={{ width: `${((data.pump_insulin_remaining ?? 300) / 300) * 100}%` }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex gap-2 sm:gap-3 flex-wrap">
             <button 
