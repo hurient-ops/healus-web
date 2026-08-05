@@ -389,8 +389,16 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50">
-        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
+      <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50 min-h-[80vh]">
+        {!data ? (
+          <div className="flex flex-col items-center justify-center h-full w-full py-32 animate-in fade-in duration-500">
+            <Loader2 className="w-12 h-12 text-[#17409c] animate-spin mb-6" />
+            <h3 className="text-2xl font-bold font-serif text-gray-800 mb-2">건강 데이터를 동기화하고 있습니다</h3>
+            <p className="text-gray-500 font-medium">최근 100일간의 라이프로그를 분석 중입니다...</p>
+          </div>
+        ) : (
+          <div className="animate-in fade-in duration-700">
+            <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight break-keep mb-2">
               {JSON.parse(localStorage.getItem('user') || '{}')?.name || data?.user_name || "회원"}님의 대시보드
@@ -723,7 +731,8 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-
+        </div>
+        )}
       </main>
 
       {isModalOpen && (

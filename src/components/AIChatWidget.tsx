@@ -52,9 +52,10 @@ export default function AIChatWidget({ contextData }: AIChatWidgetProps) {
       } else {
         setMessages([...newMessages, { role: 'assistant', content: response.data.error || '오류가 발생했습니다.' }]);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat API Error:', error);
-      setMessages([...newMessages, { role: 'assistant', content: '서버 연결에 실패했습니다. 다시 시도해 주세요.' }]);
+      const errorMsg = error.response?.data?.error || error.response?.data?.reply || '서버 연결에 실패했습니다. (네트워크 오류 또는 서버 오류)';
+      setMessages([...newMessages, { role: 'assistant', content: errorMsg }]);
     } finally {
       setIsLoading(false);
     }
