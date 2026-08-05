@@ -67,11 +67,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 ${recent_logs_text}
 
 지시사항:
-1. 위 데이터를 종합적으로 분석하여 회식, 수면 부족, 스트레스, 운동 등이 혈당과 인슐린 요구량에 미친 영향을 '추론(Reasoning)' 과정을 포함하여 상세히 분석해 주세요.
+1. 위 데이터를 종합적으로 분석하여 회식, 수면 부족, 스트레스, 운동 등이 혈당과 인슐린 요구량에 미친 영향을 '추론(Reasoning)' 과정을 포함하여 분석해 주세요.
 2. 결과는 JSON 형식으로 반환해야 합니다.
-3. JSON 스키마는 다음과 같아야 합니다:
+3. 각 추론 단계는 핵심만 1~2문장으로 매우 짧고 간결하게 작성하세요. (전체 토큰 수 절약 목적)
+4. JSON 스키마는 다음과 같아야 합니다:
 {
-    "reasoning_process": ["첫 번째 추론 단계", "두 번째 추론 단계", ...],
+    "reasoning_process": ["첫 번째 짧은 추론", "두 번째 짧은 추론", ...],
     "insight": "환자를 위한 따뜻하고 전문적인 최종 조언 (3줄 이내)"
 }
 절대 마크다운(\`\`\`json) 텍스트 블록으로 감싸지 말고 순수 JSON 문자열만 출력하세요.`;
@@ -111,7 +112,7 @@ ${recent_logs_text}
             { role: 'user', content: prompt }
           ],
           temperature: 0.7,
-          max_tokens: 400
+          max_tokens: 800
         })
       });
 
