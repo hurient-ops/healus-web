@@ -372,12 +372,16 @@ export default function Dashboard() {
 
                 <div className="bg-white px-5 py-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-5 w-fit min-w-[240px]">
                   <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-                    <Syringe className="absolute text-gray-200 w-full h-full -rotate-45" strokeWidth={1.5} />
+                    <div className="absolute inset-0 -rotate-45 transition-transform">
+                      <Syringe className="text-gray-200 w-full h-full" strokeWidth={1.5} />
+                    </div>
                     <div 
                       className="absolute left-0 bottom-0 right-0 overflow-hidden transition-all duration-500" 
                       style={{ height: `calc(20% + ${((data.pump_insulin_remaining ?? 300) / 300) * 60}%)` }}
                     >
-                      <Syringe className="absolute left-0 bottom-0 text-blue-500 w-16 h-16 -rotate-45" strokeWidth={1.5} fill="currentColor" />
+                      <div className="absolute left-0 bottom-0 w-16 h-16 -rotate-45 transition-transform">
+                        <Syringe className="text-blue-500 w-full h-full" strokeWidth={1.5} fill="currentColor" />
+                      </div>
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col justify-center text-gray-700">
