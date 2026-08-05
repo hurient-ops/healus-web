@@ -359,7 +359,7 @@ export default function Dashboard() {
                     <Battery className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} />
                     <div 
                       className="absolute left-0 top-0 bottom-0 overflow-hidden transition-all duration-500" 
-                      style={{ width: `${((data.pump_battery_level ?? 4) / 4) * 100}%` }}
+                      style={{ width: `calc(10% + ${((data.pump_battery_level ?? 4) / 4) * 75}%)` }}
                     >
                       <Battery className="absolute left-0 top-0 text-green-500 w-16 h-16" strokeWidth={1.5} fill="currentColor" />
                     </div>
@@ -375,7 +375,7 @@ export default function Dashboard() {
                     <Syringe className="absolute text-gray-200 w-full h-full -rotate-45" strokeWidth={1.5} />
                     <div 
                       className="absolute left-0 bottom-0 right-0 overflow-hidden transition-all duration-500" 
-                      style={{ height: `${((data.pump_insulin_remaining ?? 300) / 300) * 100}%` }}
+                      style={{ height: `calc(20% + ${((data.pump_insulin_remaining ?? 300) / 300) * 60}%)` }}
                     >
                       <Syringe className="absolute left-0 bottom-0 text-blue-500 w-16 h-16 -rotate-45" strokeWidth={1.5} fill="currentColor" />
                     </div>
