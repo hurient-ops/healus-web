@@ -372,12 +372,24 @@ export default function Dashboard() {
 
                 <div className="bg-white px-5 py-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-5 w-fit min-w-[240px]">
                   <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-                    <Syringe className="absolute text-gray-200 w-full h-full" strokeWidth={1.5} transform="rotate(-135 12 12)" />
+                    <svg viewBox="0 0 24 24" className="absolute inset-0 text-gray-200 w-full h-full" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="4" y="8" width="14" height="8" rx="1" />
+                      <rect x="18" y="10" width="2" height="4" rx="0.5" />
+                      <line x1="20" y1="12" x2="24" y2="12" />
+                      <line x1="1" y1="12" x2="4" y2="12" />
+                      <line x1="1" y1="9" x2="1" y2="15" />
+                    </svg>
                     <div 
                       className="absolute right-0 top-0 bottom-0 overflow-hidden transition-all duration-500" 
-                      style={{ width: `calc(15% + ${((data.pump_insulin_remaining ?? 300) / 300) * 65}%)` }}
+                      style={{ width: `calc(25% + ${((data.pump_insulin_remaining ?? 300) / 300) * 58.3}%)` }}
                     >
-                      <Syringe className="absolute right-0 top-0 text-blue-500 w-16 h-16" strokeWidth={1.5} fill="currentColor" transform="rotate(-135 12 12)" />
+                      <svg viewBox="0 0 24 24" className="absolute right-0 top-0 text-blue-500 w-16 h-16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="4" y="8" width="14" height="8" rx="1" fill="currentColor" />
+                        <rect x="18" y="10" width="2" height="4" rx="0.5" fill="currentColor" />
+                        <line x1="20" y1="12" x2="24" y2="12" />
+                        <line x1="1" y1="12" x2="4" y2="12" />
+                        <line x1="1" y1="9" x2="1" y2="15" />
+                      </svg>
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col justify-center text-gray-700">
