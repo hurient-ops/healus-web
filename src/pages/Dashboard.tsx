@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Activity, Brain, X, AlertTriangle, Droplet, ArrowRight, Loader2, Moon, Zap, Plus, Camera, FileDown, MessageSquare, ChevronLeft, ChevronRight, Battery } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import axios from 'axios';
@@ -59,6 +59,8 @@ interface PumpLog {
 
 interface DashboardData {
   user_name: string;
+  pump_battery_level?: number | null;
+  pump_insulin_remaining?: number | null;
   pump_logs: PumpLog[];
   bg_logs: BgLog[];
 }
@@ -268,7 +270,7 @@ export default function Dashboard() {
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-2xl font-bold font-serif" style={{ color }}>{value.toFixed(1)}</span>
+            <span className="text-2xl font-bold font-serif" style={{ color }}>{unit === 'U' ? value.toFixed(2) : value.toFixed(1)}</span>
             <span className="text-xs text-gray-500 font-bold">{unit}</span>
           </div>
         </div>
@@ -285,9 +287,9 @@ export default function Dashboard() {
         <div className="bg-white/95 backdrop-blur-md p-4 border border-gray-200 shadow-xl rounded-xl">
           <p className="font-bold text-gray-800 mb-2 border-b pb-2">{label}</p>
           <p className="text-sm text-gray-600 flex justify-between gap-4"><span>혈당(CGM):</span> <span className="font-bold">{log.avg_cgm.toFixed(1)} mg/dL</span></p>
-          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>식사주입:</span> <span className="font-bold text-[#1cb085]">{log.bolus.toFixed(1)} U</span></p>
-          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>기초주입:</span> <span className="font-bold text-[#4a90e2]">{log.basal.toFixed(1)} U</span></p>
-          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>추가주입:</span> <span className="font-bold text-[#8b5cf6]">{log.append.toFixed(1)} U</span></p>
+          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>식사주입:</span> <span className="font-bold text-[#1cb085]">{log.bolus.toFixed(2)} U</span></p>
+          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>기초주입:</span> <span className="font-bold text-[#4a90e2]">{log.basal.toFixed(2)} U</span></p>
+          <p className="text-sm text-gray-600 flex justify-between gap-4"><span>추가주입:</span> <span className="font-bold text-[#8b5cf6]">{log.append.toFixed(2)} U</span></p>
           {(log.exercise_hours > 0 || log.reception_hours > 0 || log.notes || log.error_count > 0) && (
             <div className="mt-2 pt-2 border-t flex flex-col gap-1">
               <div className="flex flex-wrap gap-1">
@@ -312,9 +314,9 @@ export default function Dashboard() {
 사용자 데이터 요약 (최근 100일 기준):
 - 평균 혈당: ${avgBg.toFixed(1)} mg/dL
 - 목표 혈당 달성률: ${targetBgPercent.toFixed(1)}%
-- 금일 기초 인슐린 주입: ${avgBasal.toFixed(1)} U
-- 금일 식사 인슐린 주입: ${avgBolus.toFixed(1)} U
-- 금일 추가 인슐린 주입: ${avgAppend.toFixed(1)} U
+- 금일 기초 인슐린 주입: ${avgBasal.toFixed(2)} U
+- 금일 식사 인슐린 주입: ${avgBolus.toFixed(2)} U
+- 금일 추가 인슐린 주입: ${avgAppend.toFixed(2)} U
 `.trim();
 
   return (
@@ -345,9 +347,24 @@ export default function Dashboard() {
       <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50">
         <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif tracking-tight break-keep">
-              {JSON.parse(localStorage.getItem('user') || '{}')?.name || data?.user_name || "회원"}님의 대시보드
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight break-keep">
+                {JSON.parse(localStorage.getItem('user') || '{}')?.name || data?.user_name || "회원"}님의 대시보드
+              </h2>
+              {data && (data.pump_battery_level !== undefined || data.pump_insulin_remaining !== undefined) && (
+                <div className="inline-flex items-center gap-3 bg-white px-4 py-1.5 rounded-full border border-gray-200 shadow-sm text-sm font-bold text-gray-700 w-fit">
+                  <div className="flex items-center gap-1.5" title="펌프 배터리">
+                    <Battery className="w-4 h-4 text-green-600" />
+                    <span>{data.pump_battery_level ?? 4} / 4</span>
+                  </div>
+                  <div className="w-px h-4 bg-gray-300"></div>
+                  <div className="flex items-center gap-1.5" title="인슐린 잔량">
+                    <Droplet className="w-4 h-4 text-blue-500" />
+                    <span>{data.pump_insulin_remaining !== undefined && data.pump_insulin_remaining !== null ? data.pump_insulin_remaining.toFixed(2) : '300.00'} U</span>
+                  </div>
+                </div>
+              )}
+            </div>
             <p className="text-gray-500 font-medium break-keep">최근 100일간의 라이프로그 및 인슐린 투여 기록 분석</p>
           </div>
           <div className="flex gap-2 sm:gap-3 flex-wrap">
