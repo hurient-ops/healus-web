@@ -143,23 +143,26 @@ export default function Dashboard() {
       return;
     }
 
+    const formatU = (val: number) => Number(val.toFixed(1));
+
     const battery = data?.pump_battery_level ?? 4;
     const insulin = data?.pump_insulin_remaining ?? 300;
     
-    let warningMsg = "";
+    // 시작 시 앞부분이 잘리는(Clipping) 현상을 막기 위한 웜업(Warm-up) 문구
+    let warningMsg = "힐어스 스마트 브리핑입니다. ";
     if (battery <= 1) warningMsg += "주의! 펌프 배터리가 1칸 남았습니다. ";
-    if (insulin < 30) warningMsg += `주의! 인슐린 잔량이 ${insulin.toFixed(1)} 유닛으로 30유닛 미만입니다. 교체가 필요합니다. `;
+    if (insulin < 30) warningMsg += `주의! 인슐린 잔량이 ${formatU(insulin)} 유닛으로, 30 유닛 미만입니다. 교체가 필요합니다. `;
 
-    const statusMsg = `현재 펌프 배터리는 ${battery}칸, 인슐린은 ${insulin.toFixed(1)}유닛 남아있습니다. `;
+    const statusMsg = `현재 펌프 배터리는 ${battery}칸, 인슐린은 ${formatU(insulin)} 유닛 남아있습니다. `;
 
     const basal = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].basal : 0;
     const bolus = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].bolus : 0;
     const append = data?.pump_logs.length ? data.pump_logs[data.pump_logs.length-1].append : 0;
     const total = basal + bolus + append;
-    const dailyMsg = `오늘 하루 총 ${total.toFixed(1)}유닛을 주입했으며, 이 중 기초 주입은 ${basal.toFixed(1)}유닛, 식사 및 추가 주입은 ${(bolus + append).toFixed(1)}유닛입니다. `;
+    const dailyMsg = `오늘 하루 총 ${formatU(total)} 유닛을 주입했으며, 이 중 기초 주입은 ${formatU(basal)} 유닛, 식사 및 추가 주입은 ${formatU(bolus + append)} 유닛입니다. `;
 
     const insightMsg = aiData && aiData.insight && !aiData.insight.includes("오류") && !aiData.insight.includes("지연")
-      ? `오늘의 AI 주치의 조언입니다. ${aiData.insight}` 
+      ? `오늘의 에이아이 주치의 조언입니다. ${aiData.insight}` 
       : "";
 
     const textToSpeak = warningMsg + statusMsg + dailyMsg + insightMsg;
@@ -167,7 +170,7 @@ export default function Dashboard() {
     window.speechSynthesis.cancel(); // Cancel any ongoing speech
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.lang = 'ko-KR';
-    utterance.rate = 1.15; // Slightly faster for natural feel
+    utterance.rate = 1.05; // 발음을 또렷하게 하기 위해 속도를 조금 늦춤 (1.15 -> 1.05)
     
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
