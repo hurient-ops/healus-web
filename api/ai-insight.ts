@@ -76,6 +76,16 @@ ${recent_logs_text}
 }
 절대 마크다운(\`\`\`json) 텍스트 블록으로 감싸지 말고 순수 JSON 문자열만 출력하세요.`;
 
+    if (!GROQ_API_KEY) {
+      return res.status(200).json({
+        status: "success",
+        insight: "시스템 설정 오류: AI API 키(GROQ_API_KEY)가 등록되지 않았습니다. Vercel 환경 변수를 확인해주세요.",
+        reasoning: ["환경 변수 누락", "GROQ_API_KEY 확인 필요"],
+        model: "Error",
+        prompt_used: ""
+      });
+    }
+
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -94,7 +104,15 @@ ${recent_logs_text}
     });
 
     if (!groqResponse.ok) {
-      throw new Error(`Groq API error: ${groqResponse.statusText}`);
+      const errorText = await groqResponse.text();
+      console.error("Groq API Error:", errorText);
+      return res.status(200).json({
+        status: "success",
+        insight: `AI 분석 중 일시적인 서버 오류가 발생했습니다. (${groqResponse.status})`,
+        reasoning: ["Groq API 응답 오류", errorText.substring(0, 100)],
+        model: "Error",
+        prompt_used: ""
+      });
     }
 
     const groqData = await groqResponse.json();
@@ -129,8 +147,14 @@ ${recent_logs_text}
       prompt_used: prompt
     });
 
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+  } catch (error: any) {
+    console.error("ai-insight Error:", error);
+    return res.status(200).json({
+      status: "success",
+      insight: "AI 서버와의 통신 지연 또는 내부 오류로 분석을 가져오지 못했습니다.",
+      reasoning: ["서버 내부 오류 발생", error.message || "Unknown error"],
+      model: "Error",
+      prompt_used: ""
+    });
   }
 }
