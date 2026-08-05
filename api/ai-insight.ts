@@ -86,31 +86,56 @@ ${recent_logs_text}
       });
     }
 
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: 'You are a helpful, professional medical AI assistant.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000
-      })
-    });
+    const modelsToTry = [
+      'llama-3.3-70b-versatile',
+      'llama-3.1-8b-instant',
+      'mixtral-8x7b-32768'
+    ];
 
-    if (!groqResponse.ok) {
-      const errorText = await groqResponse.text();
-      console.error("Groq API Error:", errorText);
+    let groqResponse = null;
+    let usedModel = modelsToTry[0];
+    let errorText = "";
+
+    for (const model of modelsToTry) {
+      usedModel = model;
+      groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GROQ_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: [
+            { role: 'system', content: 'You are a helpful, professional medical AI assistant.' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 400
+        })
+      });
+
+      if (groqResponse.ok) {
+        break; // Success! Exit loop.
+      } else if (groqResponse.status === 429) {
+        // Rate limited. Try the next smaller/different model.
+        errorText = await groqResponse.text();
+        console.warn(`Groq 429 on ${model}, trying next...`);
+        continue;
+      } else {
+        // Other errors (401, 500), don't retry.
+        errorText = await groqResponse.text();
+        break;
+      }
+    }
+
+    if (!groqResponse || !groqResponse.ok) {
+      console.error("Groq API Error Exhausted:", errorText);
       return res.status(200).json({
         status: "success",
-        insight: `AI 분석 중 일시적인 서버 오류가 발생했습니다. (${groqResponse.status})`,
-        reasoning: ["Groq API 응답 오류", errorText.substring(0, 100)],
-        model: "Error",
+        insight: `이용자가 많아 AI 분석이 지연되고 있습니다. 잠시 후 다시 시도해주세요.`,
+        reasoning: ["API 호출 한도(Rate Limit) 초과", "모든 예비 AI 모델 테스트 실패"],
+        model: "Error (429)",
         prompt_used: ""
       });
     }
@@ -143,7 +168,7 @@ ${recent_logs_text}
       status: "success",
       insight: parsed_json.insight || "",
       reasoning: parsed_json.reasoning_process || [],
-      model: "llama-3.3-70b-versatile",
+      model: usedModel,
       prompt_used: prompt
     });
 
