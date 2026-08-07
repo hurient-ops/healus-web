@@ -187,7 +187,15 @@ export default function SampleDashboard() {
     const element = document.getElementById('dashboard-content');
     if (!element) return;
     try {
-      const image = await toPng(element, { pixelRatio: 2 });
+      const image = await toPng(element, { 
+        pixelRatio: 2,
+        backgroundColor: '#f9fafb',
+        style: {
+          margin: '0',
+          transform: 'scale(1)',
+          transformOrigin: 'top left',
+        }
+      });
       const link = document.createElement('a');
       link.href = image;
       link.download = `healus_sample_dashboard_${new Date().toISOString().slice(0, 10)}.png`;
@@ -202,7 +210,15 @@ export default function SampleDashboard() {
     const element = document.getElementById('dashboard-content');
     if (!element) return;
     try {
-      const imgData = await toPng(element, { pixelRatio: 2 });
+      const imgData = await toPng(element, { 
+        pixelRatio: 2,
+        backgroundColor: '#f9fafb',
+        style: {
+          margin: '0',
+          transform: 'scale(1)',
+          transformOrigin: 'top left',
+        }
+      });
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const elWidth = element.clientWidth;
@@ -377,7 +393,8 @@ export default function SampleDashboard() {
         </Link>
       </div>
 
-      <main id="dashboard-content" className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 relative z-10 bg-gray-50 min-h-[80vh]">
+      <main className="max-w-7xl mx-auto relative z-10 min-h-[80vh] bg-gray-50">
+        <div id="dashboard-content" className="w-full h-full px-4 md:px-6 py-6 md:py-10 bg-gray-50">
         {!data ? (
           <div className="flex flex-col items-center justify-center h-full w-full py-32 animate-in fade-in duration-500">
             <Loader2 className="w-12 h-12 text-[#17409c] animate-spin mb-6" />
@@ -707,6 +724,7 @@ export default function SampleDashboard() {
         </div>
         </div>
         )}
+        </div>
       </main>
 
       {isModalOpen && (
